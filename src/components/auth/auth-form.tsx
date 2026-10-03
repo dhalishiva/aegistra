@@ -16,15 +16,27 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   async function submit(e: FormEvent) {
     e.preventDefault();
     setLoading(true); setMessage("");
+    const requestedNext = new URLSearchParams(window.location.search).get("next");
+    const signupNext = safeRedirectPath(requestedNext, "/onboarding");
     const result = mode === "signup"
-      ? await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding` } })
+      ? await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(signupNext)}`,
+          },
+        })
       : await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (result.error) return setMessage(result.error.message);
     if (mode === "signup" && !result.data.session) return setMessage("Check your email to confirm your account, then log in.");
-    // Middleware sends logged-out visitors to /login?next=<page>; send them back there after login.
+    // Preserve safe invite/protected destinations through both login and signup.
     const next = new URLSearchParams(window.location.search).get("next");
-    router.push(mode === "signup" ? "/onboarding" : safeRedirectPath(next, "/app"));
+    router.push(
+      mode === "signup"
+        ? safeRedirectPath(next, "/onboarding")
+        : safeRedirectPath(next, "/app")
+    );
     router.refresh();
   }
 
