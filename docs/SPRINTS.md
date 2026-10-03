@@ -24,7 +24,7 @@ Status: in progress.
 - [x] Append-only review-history records
 - [x] Team invitations and enforced workspace roles
 - [x] Private evidence uploads
-- [ ] CSV import/export
+- [x] CSV import/export with validation and plan limits
 - [ ] Reminder emails
 - [x] Database-backed audit/activity log
 
