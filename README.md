@@ -155,7 +155,7 @@ See [`docs/SECURITY.md`](docs/SECURITY.md) and [`docs/ARCHITECTURE.md`](docs/ARC
 
 Sprint 1 includes the marketing site, authentication, tenant model, AI register, scoring, dashboard, actions, evidence view, SEO/social metadata, Vercel Analytics, and admin surface.
 
-Sprint 2 now includes edit/detail screens, append-only review history, private evidence uploads, and a database-backed activity log. Next planned work includes team invitations, CSV import/export, reminder workflows, billing, and assurance-pack generation.
+Sprint 2 now includes edit/detail screens, append-only review history, private evidence uploads, a database-backed activity log, team invitations/roles, and CSV import/export. The remaining Sprint 2 item is reminder email workflows before moving into billing and assurance-pack generation.
 
 ## License
 
