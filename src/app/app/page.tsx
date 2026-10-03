@@ -93,7 +93,7 @@ export default async function Dashboard() {
                       {system.owner_name || "No owner"}
                     </div>
                   </div>
-                  <span className="badge capitalize">
+                  <span className={`badge badge-${system.priority_level} capitalize`}>
                     {system.priority_level} · {system.priority_score}
                   </span>
                 </div>

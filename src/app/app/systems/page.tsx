@@ -52,7 +52,7 @@ export default async function Systems() {
                 <td>{system.owner_name || "—"}</td>
                 <td className="capitalize">{system.lifecycle}</td>
                 <td>
-                  <span className="badge capitalize">
+                  <span className={`badge badge-${system.priority_level} capitalize`}>
                     {system.priority_level} · {system.priority_score}
                   </span>
                 </td>

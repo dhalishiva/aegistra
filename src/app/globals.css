@@ -1,17 +1,133 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-:root{color-scheme:dark}*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(circle at 10% 0%,rgba(14,165,233,.13),transparent 30%),radial-gradient(circle at 90% 10%,rgba(99,102,241,.12),transparent 28%),#071019;color:#e8f0f7;font-family:Arial,Helvetica,sans-serif}
-a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}
-.container-shell{@apply mx-auto w-full max-w-7xl px-5 md:px-8}
-.card{@apply rounded-2xl border border-white/10 bg-white/[0.045] backdrop-blur}
-.card-hover{@apply transition duration-200 hover:-translate-y-0.5 hover:border-sky-400/30 hover:bg-white/[0.065]}
-.btn-primary{@apply inline-flex items-center justify-center rounded-xl bg-sky-400 px-4 py-2.5 font-semibold text-slate-950 transition hover:bg-sky-300}
-.btn-secondary{@apply inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 font-semibold text-white transition hover:bg-white/10}
-.input{@apply w-full rounded-xl border border-white/10 bg-slate-950/70 px-3.5 py-2.5 text-white outline-none placeholder:text-slate-500 focus:border-sky-400/60}
-.label{@apply mb-1.5 block text-sm font-medium text-slate-300}.kicker{@apply text-xs font-bold uppercase tracking-[0.22em] text-sky-300}
-.badge{@apply inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold}
-.table-wrap{@apply overflow-x-auto rounded-2xl border border-white/10}.table{@apply min-w-full divide-y divide-white/10 text-sm}
-.table th{@apply bg-white/[0.035] px-4 py-3 text-left font-semibold text-slate-400}.table td{@apply px-4 py-3 align-middle text-slate-200}
-::selection{background:rgba(56,189,248,.25)}
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: #0a1016;
+  color: #e7edf3;
+  @apply font-sans antialiased;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Anchor targets sit below the sticky header. */
+[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+:focus-visible {
+  outline: 2px solid #55c4f5;
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(85, 196, 245, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  .container-shell {
+    @apply mx-auto w-full max-w-7xl px-5 md:px-8;
+  }
+
+  .card {
+    @apply rounded-xl border border-white/10 bg-white/[0.035];
+  }
+
+  .card-hover {
+    @apply transition duration-200 hover:border-sky-400/30 hover:bg-white/[0.06];
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-sky-400 px-4 py-2.5 font-semibold text-slate-950 transition hover:bg-sky-300;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] px-4 py-2.5 font-semibold text-white transition hover:bg-white/10;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-white/10 bg-slate-950/70 px-3.5 py-2.5 text-white outline-none placeholder:text-slate-500 focus:border-sky-400/60;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-slate-300;
+  }
+
+  /* Short lead-in above a page title. Sentence case on purpose. */
+  .kicker {
+    @apply text-sm font-semibold text-sky-300;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-semibold;
+  }
+
+  /* Priority levels carry their colour everywhere they appear. */
+  .badge-high {
+    @apply border-signal-high/40 bg-signal-high/10 text-signal-high;
+  }
+  .badge-medium {
+    @apply border-signal-medium/40 bg-signal-medium/10 text-signal-medium;
+  }
+  .badge-low {
+    @apply border-signal-low/40 bg-signal-low/10 text-signal-low;
+  }
+
+  .table-wrap {
+    @apply overflow-x-auto rounded-xl border border-white/10;
+  }
+
+  .table {
+    @apply min-w-full divide-y divide-white/10 text-sm;
+  }
+
+  .table th {
+    @apply bg-white/[0.035] px-4 py-3 text-left font-semibold text-slate-400;
+  }
+
+  .table td {
+    @apply px-4 py-3 align-middle text-slate-200;
+  }
+}

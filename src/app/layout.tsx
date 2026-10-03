@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { getSiteUrl } from "@/lib/site-url";
+import "@fontsource-variable/bricolage-grotesque/opsz.css";
 import "./globals.css";
 
 const siteUrl = getSiteUrl();
