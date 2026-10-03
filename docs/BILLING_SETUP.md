@@ -7,9 +7,9 @@ Run `supabase/migrations/014_billing.sql` in the Supabase SQL editor (once).
 
 ## 2. Razorpay dashboard
 1. Settings -> API Keys: generate a key pair (test mode first). The Key ID looks like `rzp_test_...`.
-2. International payments: USD prices need "International payments" enabled on the account. Without it, set
-   `RAZORPAY_CURRENCY=INR` is NOT enough: amounts are defined in USD cents, so enable international payments or
-   change the amounts in `src/lib/razorpay.ts`.
+2. Prices are defined in US dollars (500 and 1000 cents). Razorpay needs "International payments" enabled on the
+   account to charge in USD. To charge in INR instead, change `amountFor` in `src/lib/razorpay.ts` to INR amounts
+   and set `RAZORPAY_CURRENCY=INR`.
 3. Settings -> Webhooks -> Add new webhook
    - URL: `https://aegistra.vercel.app/api/razorpay/webhook`
    - Secret: a long random string (this becomes `RAZORPAY_WEBHOOK_SECRET`)
