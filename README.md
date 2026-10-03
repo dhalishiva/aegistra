@@ -80,14 +80,9 @@ Then open `http://localhost:3000`.
 
 ### Database
 
-Create a Supabase project and apply:
+Create a Supabase project and apply **every SQL file in `supabase/migrations/` in numeric order**.
 
-```text
-supabase/migrations/001_init.sql
-supabase/migrations/002_performance_indexes.sql
-```
-
-The migrations create the workspace, member, AI-system, action, evidence, and profile tables and enable tenant-isolating RLS policies.
+The migration set creates the workspace, member, invitation, AI-system, review, action, evidence, activity, and profile tables; the private evidence bucket; helper/RPC functions; indexes; triggers; and tenant-isolating RLS policies.
 
 ### Supabase Auth URLs
 
