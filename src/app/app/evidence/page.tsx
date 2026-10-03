@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AssuranceCard } from "@/components/assurance-card";
 import { SubmitButton } from "@/components/submit-button";
 import { Download, FileText, LockKeyhole, Trash2, Upload } from "lucide-react";
 import { deleteEvidence, uploadEvidence } from "@/lib/actions";
@@ -59,6 +60,8 @@ export default async function Evidence() {
         Store the documents that support reviews, vendor checks, decisions and
         customer-assurance responses. Files are private to workspace members.
       </p>
+
+      <AssuranceCard />
 
       <div className="mt-7 grid gap-4 sm:grid-cols-3">
         {stats.map(([label, value]) => (
