@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Activity, ArrowUpRight, FileText, ListChecks, ShieldCheck, Users } from "lucide-react";
+import { Activity, ArrowUpRight, BellRing, FileText, ListChecks, ShieldCheck, Users } from "lucide-react";
 import { getSessionContext } from "@/lib/workspace";
 
 const actionLabels: Record<string, string> = {
@@ -17,6 +17,8 @@ const actionLabels: Record<string, string> = {
   "member.added": "Workspace member added",
   "member.removed": "Workspace member removed",
   "member.role_changed": "Member role changed",
+  "reminders.settings_updated": "Reminder settings updated",
+  "review_reminder.sent": "Review reminder sent",
 };
 
 function destination(entityType: string, entityId: string | null) {
@@ -32,6 +34,7 @@ function EventIcon({ entityType }: { entityType: string }) {
   if (entityType === "evidence") return <FileText size={16} />;
   if (entityType === "action_item") return <ListChecks size={16} />;
   if (entityType === "workspace_member") return <Users size={16} />;
+  if (entityType === "workspace") return <BellRing size={16} />;
   return <ShieldCheck size={16} />;
 }
 
