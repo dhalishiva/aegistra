@@ -15,6 +15,13 @@ export const AI_SYSTEM_CSV_HEADERS = [
   "notes",
 ] as const;
 
+export const AI_SYSTEM_EXPORT_HEADERS = [
+  ...AI_SYSTEM_CSV_HEADERS,
+  "priority_score",
+  "priority_level",
+  "last_reviewed",
+] as const;
+
 export type AiSystemCsvHeader = (typeof AI_SYSTEM_CSV_HEADERS)[number];
 
 export type CsvRow = Record<string, string>;
