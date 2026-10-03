@@ -3,6 +3,9 @@
 ## MVP controls
 - Collect governance metadata rather than production prompts/model traffic.
 - Enforce tenant isolation with Postgres Row Level Security.
+- Keep evidence files in a private Supabase Storage bucket with workspace-scoped object policies.
+- Generate short-lived signed URLs for evidence downloads.
+- Write key audit events through database triggers rather than relying only on frontend logging.
 - Keep SUPABASE_SECRET_KEY server-only.
 - Gate /admin with an authenticated email allow-list.
 - Use a non-exposed private schema for authorization helper functions.
