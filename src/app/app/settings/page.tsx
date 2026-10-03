@@ -1,3 +1,4 @@
+import { isReminderEmailConfigured } from "@/lib/email";
 import { redirect } from "next/navigation";
 import { Shield, Trash2, UserCog, Users, XCircle } from "lucide-react";
 import { InviteMemberForm } from "@/components/invite-member-form";
@@ -83,11 +84,7 @@ export default async function Settings() {
   const missingOwnerEmail = (reminderSystemsResult.data ?? []).filter(
     (system) => !system.owner_email?.trim()
   ).length;
-  const providerConfigured = Boolean(
-    process.env.RESEND_API_KEY &&
-      process.env.REMINDER_FROM_EMAIL &&
-      process.env.CRON_SECRET
-  );
+  const providerConfigured = isReminderEmailConfigured();
   const now = Date.now();
 
   return (

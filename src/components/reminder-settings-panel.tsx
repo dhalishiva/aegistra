@@ -129,7 +129,7 @@ export function ReminderSettingsPanel({
               <div className="flex gap-2 rounded-xl border border-amber-400/20 bg-amber-400/[0.05] p-3 text-xs leading-5 text-amber-100">
                 <MailWarning size={16} className="mt-0.5 shrink-0" />
                 The workflow is installed, but production email requires
-                RESEND_API_KEY, REMINDER_FROM_EMAIL and CRON_SECRET in Vercel.
+                SMTP settings (or RESEND_API_KEY), REMINDER_FROM_EMAIL and CRON_SECRET in Vercel.
               </div>
             )}
 

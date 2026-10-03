@@ -7,6 +7,7 @@ const pages: { path: string; lastModified: string; priority: number }[] = [
   { path: "", lastModified: "2026-10-03", priority: 1 },
   { path: "/pricing", lastModified: "2026-10-03", priority: 0.8 },
   { path: "/security", lastModified: "2026-10-03", priority: 0.8 },
+  { path: "/contact", lastModified: "2026-10-03", priority: 0.4 },
   { path: "/privacy", lastModified: "2026-10-03", priority: 0.3 },
   { path: "/terms", lastModified: "2026-10-03", priority: 0.3 },
 ];

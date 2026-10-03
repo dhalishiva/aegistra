@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./logo";
+import { SUPPORT_EMAIL } from "@/lib/contact";
 
 const columns = [
   {
@@ -18,6 +19,7 @@ const columns = [
       ["Security", "/security"],
       ["Privacy notice", "/privacy"],
       ["Terms of service", "/terms"],
+      ["Contact", "/contact"],
     ],
   },
   {
@@ -40,6 +42,11 @@ export function SiteFooter() {
           </p>
           <p className="mt-4 text-sm leading-6 text-slate-500">
             Aegistra organizes governance work. It is not legal advice, a certification or a legal risk classification.
+          </p>
+          <p className="mt-4 text-sm">
+            <a className="text-slate-300 underline-offset-4 hover:underline" href={`mailto:${SUPPORT_EMAIL}`}>
+              {SUPPORT_EMAIL}
+            </a>
           </p>
         </div>
 

@@ -79,7 +79,7 @@ export async function GET(request: Request) {
       {
         ok: false,
         error:
-          "Reminder email delivery is not configured. Set RESEND_API_KEY and REMINDER_FROM_EMAIL.",
+          "Reminder email delivery is not configured. Set SMTP_* (or RESEND_API_KEY) and REMINDER_FROM_EMAIL.",
       },
       { status: 503 }
     );
