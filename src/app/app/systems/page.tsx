@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { SystemsCsvTools } from "@/components/systems-csv-tools";
 import { getSessionContext } from "@/lib/workspace";
 
 export default async function Systems() {
-  const { supabase, workspace } = await getSessionContext();
+  const { supabase, workspace, membership } = await getSessionContext();
+  const canWrite = membership.role !== "viewer";
 
   const result = await supabase
     .from("ai_systems")
@@ -23,11 +25,15 @@ export default async function Systems() {
             Every AI-enabled system or business use your team relies on.
           </p>
         </div>
-        <Link href="/app/systems/new" className="btn-primary gap-2">
-          <Plus size={17} />
-          Add system
-        </Link>
+        {canWrite && (
+          <Link href="/app/systems/new" className="btn-primary gap-2">
+            <Plus size={17} />
+            Add system
+          </Link>
+        )}
       </div>
+
+      <SystemsCsvTools canImport={canWrite} />
 
       <div className="table-wrap mt-7">
         <table className="table">
