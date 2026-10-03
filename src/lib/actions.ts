@@ -101,7 +101,7 @@ export async function createAiSystem(formData: FormData) {
     .eq("workspace_id", member.workspace_id);
 
   if ((count || 0) >= (limits[plan] || 3)) {
-    throw new Error(`Your ${plan} plan AI-system limit has been reached.`);
+    redirect("/app/systems/new?limit=1");
   }
 
   const inputs = governanceInputs(formData);

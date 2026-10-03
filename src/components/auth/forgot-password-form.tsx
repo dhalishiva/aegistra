@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
+import { Spinner } from "@/components/submit-button";
 import { OtpInput } from "./otp-input";
 
 const RESEND_SECONDS = 45;
@@ -75,8 +76,8 @@ export function ForgotPasswordForm() {
           <input id="email" className="input" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" />
         </div>
         {status}
-        <button disabled={loading} className="btn-primary w-full disabled:opacity-60">
-          {loading ? "Sending…" : "Send 6-digit code"}
+        <button disabled={loading} className="btn-primary w-full gap-2 disabled:opacity-60">
+          {loading ? <><Spinner />Sending code…</> : "Send 6-digit code"}
         </button>
       </form>
     );
@@ -94,8 +95,8 @@ export function ForgotPasswordForm() {
         <input id="new-password" className="input" type="password" autoComplete="new-password" minLength={8} required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 8 characters" />
       </div>
       {status}
-      <button disabled={loading || code.length !== 6} className="btn-primary w-full disabled:opacity-60">
-        {loading ? "Updating…" : "Set new password"}
+      <button disabled={loading || code.length !== 6} className="btn-primary w-full gap-2 disabled:opacity-60">
+        {loading ? <><Spinner />Updating…</> : "Set new password"}
       </button>
       <div className="flex items-center justify-between text-sm text-slate-400">
         <button type="button" onClick={() => sendCode()} disabled={cooldown > 0 || loading} className="underline underline-offset-4 disabled:no-underline disabled:opacity-60">

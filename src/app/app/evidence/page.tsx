@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SubmitButton } from "@/components/submit-button";
 import { Download, FileText, LockKeyhole, Trash2, Upload } from "lucide-react";
 import { deleteEvidence, uploadEvidence } from "@/lib/actions";
 import { getSessionContext } from "@/lib/workspace";
@@ -129,7 +130,7 @@ export default async function Evidence() {
             />
           </div>
 
-          <button className="btn-primary w-full">Upload evidence</button>
+          <SubmitButton pendingLabel="Uploading…" className="btn-primary w-full">Upload evidence</SubmitButton>
 
           <div className="flex gap-2 rounded-xl border border-white/10 bg-white/[0.025] p-3 text-xs leading-5 text-slate-500">
             <LockKeyhole size={15} className="mt-0.5 shrink-0 text-sky-300" />

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SubmitButton } from "@/components/submit-button";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Clock3, ShieldAlert } from "lucide-react";
 import {
@@ -201,7 +202,7 @@ export default async function SystemDetail({
           </div>
 
           <div className="flex justify-end border-t border-white/10 pt-5">
-            <button className="btn-primary">Save changes</button>
+            <SubmitButton pendingLabel="Saving…">Save changes</SubmitButton>
           </div>
         </form>
 
@@ -247,7 +248,7 @@ export default async function SystemDetail({
                 defaultValue={system.review_due || ""}
               />
 
-              <button className="btn-primary w-full">Record review</button>
+              <SubmitButton pendingLabel="Recording…" className="btn-primary w-full">Record review</SubmitButton>
             </div>
           </form>
 

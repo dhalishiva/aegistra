@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
 import { safeRedirectPath } from "@/lib/safe-redirect";
+import { Spinner } from "@/components/submit-button";
 import { OtpInput } from "./otp-input";
 
 const RESEND_SECONDS = 45;
@@ -47,8 +48,11 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
     if (!isSignup) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      setLoading(false);
-      if (error) return setMessage(friendly(error.message));
+      if (error) {
+        setLoading(false);
+        return setMessage(friendly(error.message));
+      }
+      // Keep the button busy until the next page takes over.
       router.push(nextPath("/app"));
       router.refresh();
       return;
@@ -61,7 +65,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath("/onboarding"))}`,
       },
     });
-    setLoading(false);
+    if (error || !data.session) setLoading(false);
     if (error) return setMessage(friendly(error.message));
     if (data.session) {
       // Email confirmation is switched off in Supabase: the user is already signed in.
@@ -79,8 +83,10 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     setLoading(true);
     setMessage("");
     const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "signup" });
-    setLoading(false);
-    if (error) return setMessage(friendly(error.message));
+    if (error) {
+      setLoading(false);
+      return setMessage(friendly(error.message));
+    }
     router.push(nextPath("/onboarding"));
     router.refresh();
   }
@@ -113,8 +119,8 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         </p>
         <OtpInput value={code} onChange={setCode} disabled={loading} />
         {status}
-        <button disabled={loading || code.length !== 6} className="btn-primary w-full disabled:opacity-60">
-          {loading ? "Checking…" : "Verify and continue"}
+        <button disabled={loading || code.length !== 6} className="btn-primary w-full gap-2 disabled:opacity-60">
+          {loading ? <><Spinner />Verifying…</> : "Verify and continue"}
         </button>
         <div className="flex items-center justify-between text-sm text-slate-400">
           <button
@@ -160,8 +166,8 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         {isSignup && <p id="password-hint" className="mt-1.5 text-xs text-slate-400">Use at least 8 characters. We will email you a 6-digit code to confirm your address.</p>}
       </div>
       {status}
-      <button disabled={loading} className="btn-primary w-full disabled:opacity-60">
-        {loading ? "Working…" : isSignup ? "Create account" : "Log in"}
+      <button disabled={loading} className="btn-primary w-full gap-2 disabled:opacity-60">
+        {loading ? <><Spinner />{isSignup ? "Creating account…" : "Logging in…"}</> : isSignup ? "Create account" : "Log in"}
       </button>
     </form>
   );

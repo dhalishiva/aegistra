@@ -1,4 +1,5 @@
 import { BellRing, CheckCircle2, MailWarning } from "lucide-react";
+import { SubmitButton } from "@/components/submit-button";
 import { updateReviewReminderSettings } from "@/lib/reminder-actions";
 
 type Settings = {
@@ -142,7 +143,7 @@ export function ReminderSettingsPanel({
             )}
 
             {canManage && (
-              <button className="btn-primary w-full">Save reminder settings</button>
+              <SubmitButton pendingLabel="Saving…" className="btn-primary w-full">Save reminder settings</SubmitButton>
             )}
           </form>
         </div>

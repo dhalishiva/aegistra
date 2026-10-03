@@ -1,4 +1,5 @@
 "use client";
+import { Spinner } from "@/components/submit-button";
 
 import { useActionState, useState } from "react";
 import { Check, Copy, Mail, UserPlus } from "lucide-react";
@@ -77,7 +78,7 @@ export function InviteMemberForm({
         )}
 
         <button disabled={pending} className="btn-primary w-full gap-2">
-          <Mail size={16} />
+          {pending ? <Spinner /> : <Mail size={16} />}
           {pending ? "Creating invite…" : "Create invite link"}
         </button>
       </form>

@@ -1,4 +1,5 @@
 import { isReminderEmailConfigured } from "@/lib/email";
+import { SubmitButton } from "@/components/submit-button";
 import { redirect } from "next/navigation";
 import { Shield, Trash2, UserCog, Users, XCircle } from "lucide-react";
 import { InviteMemberForm } from "@/components/invite-member-form";
@@ -170,10 +171,10 @@ export default async function Settings() {
                           <option value="member">Member</option>
                           <option value="viewer">Viewer</option>
                         </select>
-                        <button className="btn-secondary gap-2 px-3 py-2 text-xs">
+                        <SubmitButton pendingLabel="Saving…" className="btn-secondary px-3 py-2 text-xs">
                           <UserCog size={14} />
                           Save
-                        </button>
+                        </SubmitButton>
                       </form>
 
                       <form action={removeWorkspaceMember}>
@@ -314,7 +315,7 @@ export default async function Settings() {
           </div>
         </div>
         <form action={signOut}>
-          <button className="btn-secondary">Sign out</button>
+          <SubmitButton pendingLabel="Signing out…" className="btn-secondary">Sign out</SubmitButton>
         </form>
       </div>
     </div>

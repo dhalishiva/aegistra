@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { NavProgress } from "@/components/nav-progress";
 import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { getSiteUrl } from "@/lib/site-url";
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body>
+        <NavProgress />
         {children}
         <Analytics />
       </body>

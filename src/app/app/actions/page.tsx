@@ -1,4 +1,5 @@
 import { createActionItem, markActionDone } from "@/lib/actions";
+import { SubmitButton } from "@/components/submit-button";
 import { getSessionContext } from "@/lib/workspace";
 
 export default async function Actions() {
@@ -28,7 +29,7 @@ export default async function Actions() {
           />
           <input name="owner" className="input" placeholder="Owner" />
           <input name="due_date" type="date" className="input" />
-          <button className="btn-primary w-full">Create action</button>
+          <SubmitButton pendingLabel="Creating…" className="btn-primary w-full">Create action</SubmitButton>
         </form>
 
         <div className="space-y-3">
@@ -56,7 +57,7 @@ export default async function Actions() {
               {item.status !== "done" ? (
                 <form action={markActionDone}>
                   <input type="hidden" name="id" value={item.id} />
-                  <button className="btn-secondary text-sm">Mark done</button>
+                  <SubmitButton pendingLabel="Saving…" className="btn-secondary text-sm">Mark done</SubmitButton>
                 </form>
               ) : (
                 <span className="badge text-emerald-300">Done</span>

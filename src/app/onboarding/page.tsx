@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SubmitButton } from "@/components/submit-button";
 import { createWorkspace } from "@/lib/actions";
 import { AuthShell } from "@/components/auth/auth-shell";
 
@@ -24,7 +25,7 @@ export default function Onboarding() {
           <label htmlFor="name" className="label">Workspace name</label>
           <input id="name" name="name" required autoComplete="organization" className="input" placeholder="Acme Labs" />
         </div>
-        <button className="btn-primary w-full">Create workspace</button>
+        <SubmitButton pendingLabel="Creating workspace…" className="btn-primary w-full">Create workspace</SubmitButton>
       </form>
     </AuthShell>
   );

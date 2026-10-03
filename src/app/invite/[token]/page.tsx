@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SubmitButton } from "@/components/submit-button";
 import { CheckCircle2, MailCheck, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { acceptWorkspaceInvitation } from "@/lib/team-actions";
@@ -69,10 +70,10 @@ export default async function InvitePage({
 
               <form action={acceptWorkspaceInvitation} className="mt-4">
                 <input type="hidden" name="token" value={token} />
-                <button className="btn-primary w-full gap-2">
+                <SubmitButton pendingLabel="Joining…" className="btn-primary w-full">
                   <CheckCircle2 size={17} />
                   Accept invitation
-                </button>
+                </SubmitButton>
               </form>
 
               <p className="mt-4 text-center text-xs leading-5 text-slate-500">
