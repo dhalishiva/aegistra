@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { Shield, Trash2, UserCog, Users, XCircle } from "lucide-react";
 import { InviteMemberForm } from "@/components/invite-member-form";
+import { ReminderSettingsPanel } from "@/components/reminder-settings-panel";
 import {
   removeWorkspaceMember,
   revokeWorkspaceInvitation,
@@ -40,18 +41,53 @@ export default async function Settings() {
     p_workspace_id: workspace.id,
   });
 
-  const invitationsResult = canManage
-    ? await supabase
-        .from("workspace_invitations")
-        .select("id,email,role,expires_at,created_at")
+  const [invitationsResult, reminderSettingsResult, reminderDeliveriesResult, reminderSystemsResult] =
+    await Promise.all([
+      canManage
+        ? supabase
+            .from("workspace_invitations")
+            .select("id,email,role,expires_at,created_at")
+            .eq("workspace_id", workspace.id)
+            .is("accepted_at", null)
+            .is("revoked_at", null)
+            .order("created_at", { ascending: false })
+        : Promise.resolve({ data: [] as Invitation[] }),
+      supabase
+        .from("workspace_reminder_settings")
+        .select("enabled,days_before,include_overdue,overdue_repeat_days")
         .eq("workspace_id", workspace.id)
-        .is("accepted_at", null)
-        .is("revoked_at", null)
+        .maybeSingle(),
+      supabase
+        .from("review_reminder_deliveries")
+        .select("id,recipient_email,reminder_kind,due_date,status,sent_at,created_at,system:ai_systems(name)")
+        .eq("workspace_id", workspace.id)
         .order("created_at", { ascending: false })
-    : { data: [] as Invitation[] };
+        .limit(5),
+      supabase
+        .from("ai_systems")
+        .select("id,owner_email,review_due,lifecycle")
+        .eq("workspace_id", workspace.id)
+        .neq("lifecycle", "retired")
+        .not("review_due", "is", null),
+    ]);
 
   const members = (membersResult.data ?? []) as Member[];
   const invitations = (invitationsResult.data ?? []) as Invitation[];
+  const reminderSettings = reminderSettingsResult.data ?? {
+    enabled: false,
+    days_before: 7,
+    include_overdue: true,
+    overdue_repeat_days: 7,
+  };
+  const recentDeliveries = reminderDeliveriesResult.data ?? [];
+  const missingOwnerEmail = (reminderSystemsResult.data ?? []).filter(
+    (system) => !system.owner_email?.trim()
+  ).length;
+  const providerConfigured = Boolean(
+    process.env.RESEND_API_KEY &&
+      process.env.REMINDER_FROM_EMAIL &&
+      process.env.CRON_SECRET
+  );
   const now = Date.now();
 
   return (
@@ -202,6 +238,14 @@ export default async function Settings() {
           </section>
         </div>
       </div>
+
+      <ReminderSettingsPanel
+        settings={reminderSettings}
+        canManage={canManage}
+        providerConfigured={providerConfigured}
+        recentDeliveries={recentDeliveries}
+        missingOwnerEmail={missingOwnerEmail}
+      />
 
       {canManage && (
         <section className="card mt-5 overflow-hidden">
