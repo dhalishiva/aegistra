@@ -27,6 +27,14 @@ export const metadata: Metadata = {
     title: "Aegistra",
     description: "Lightweight AI governance for growing teams.",
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/aegistra-mark.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
