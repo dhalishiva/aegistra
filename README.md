@@ -15,7 +15,9 @@ Aegistra helps small and mid-sized organizations document where AI is used, who 
 - Transparent governance-priority scoring
 - Review dates and ownership tracking
 - Governance action queue
+- Private evidence uploads with signed download links
 - Evidence-readiness view
+- Database-backed workspace activity/audit timeline
 - Separate platform-admin page (`/admin`)
 - Supabase Row Level Security (RLS)
 - Dynamic Open Graph social preview, sitemap, and robots metadata
@@ -132,6 +134,8 @@ Billing is intentionally not wired in Sprint 1. The plan model is present so pay
 - The client uses only the Supabase publishable key.
 - Platform-admin operations use a server-only Supabase secret key.
 - The MVP stores governance metadata rather than production prompts/model traffic.
+- Evidence files are stored in a private Supabase Storage bucket with workspace-scoped RLS and expiring signed URLs.
+- Audit events are written automatically by Postgres triggers for key governance changes.
 
 See [`docs/SECURITY.md`](docs/SECURITY.md) and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
@@ -149,7 +153,7 @@ See [`docs/SECURITY.md`](docs/SECURITY.md) and [`docs/ARCHITECTURE.md`](docs/ARC
 
 Sprint 1 includes the marketing site, authentication, tenant model, AI register, scoring, dashboard, actions, evidence view, SEO/social metadata, Vercel Analytics, and admin surface.
 
-Next planned work includes edit/detail screens, invitations, evidence uploads, CSV import/export, review history, reminder workflows, billing, and assurance-pack generation.
+Sprint 2 now includes edit/detail screens, append-only review history, private evidence uploads, and a database-backed activity log. Next planned work includes team invitations, CSV import/export, reminder workflows, billing, and assurance-pack generation.
 
 ## License
 
