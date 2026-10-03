@@ -1,5 +1,6 @@
 import {
   AI_SYSTEM_CSV_HEADERS,
+  AI_SYSTEM_EXPORT_HEADERS,
   type CsvRow,
   isIsoDate,
   parseCsvBoolean,
@@ -47,7 +48,7 @@ export type ValidatedAiSystemImport = {
 };
 
 export function validateCsvHeaders(headers: string[]) {
-  const allowed = new Set<string>(AI_SYSTEM_CSV_HEADERS);
+  const allowed = new Set<string>(AI_SYSTEM_EXPORT_HEADERS);
   const unknown = headers.filter((header) => !allowed.has(header));
   if (unknown.length) {
     return `Unknown column${unknown.length === 1 ? "" : "s"}: ${unknown.join(", ")}`;
