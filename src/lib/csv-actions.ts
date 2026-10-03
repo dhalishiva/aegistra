@@ -5,6 +5,7 @@ import { getSessionContext } from "./workspace";
 import { parseCsv } from "./csv";
 import {
   type CsvImportState,
+  type ValidatedAiSystemImport,
   duplicateKey,
   validateAiSystemCsvRow,
   validateCsvHeaders,
@@ -111,7 +112,7 @@ export async function importAiSystemsCsv(
   }
 
   const validationErrors: string[] = [];
-  const validated = [];
+  const validated: ValidatedAiSystemImport[] = [];
 
   parsed.rows.forEach((row, index) => {
     const result = validateAiSystemCsvRow(row, index + 2);
