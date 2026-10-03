@@ -22,7 +22,7 @@ Status: implemented.
 Status: in progress.
 - [x] Edit/detail screens
 - [x] Append-only review-history records
-- [ ] Team invitations
+- [x] Team invitations and enforced workspace roles
 - [x] Private evidence uploads
 - [ ] CSV import/export
 - [ ] Reminder emails
