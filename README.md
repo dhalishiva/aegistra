@@ -19,6 +19,7 @@ Aegistra helps small and mid-sized organizations document where AI is used, who 
 - Evidence-readiness view
 - Database-backed workspace activity/audit timeline
 - Workspace invitations with owner/admin/member/viewer roles
+- Scheduled review reminders with delivery history and overdue cadence
 - Separate platform-admin page (`/admin`)
 - Supabase Row Level Security (RLS)
 - Dynamic Open Graph social preview, sitemap, and robots metadata
@@ -65,6 +66,12 @@ NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
 SUPABASE_SECRET_KEY=sb_secret_xxx
 ADMIN_EMAILS=you@example.com
+
+# Reminder delivery
+RESEND_API_KEY=re_xxx
+REMINDER_FROM_EMAIL=Aegistra <reminders@yourdomain.com>
+REMINDER_REPLY_TO=governance@yourdomain.com
+CRON_SECRET=use-a-random-secret-at-least-16-characters
 ```
 
 `SUPABASE_SECRET_KEY` is only required for the platform-admin dashboard. Never expose it through a `NEXT_PUBLIC_` variable.
@@ -113,6 +120,10 @@ and set the Supabase Site URL to the production domain.
 
 Vercel Analytics is already mounted in `src/app/layout.tsx` via `@vercel/analytics/react`.
 
+### Review reminder cron
+
+`vercel.json` schedules `/api/cron/review-reminders` once per day at 08:00 UTC. Set `CRON_SECRET` in Vercel so cron requests are authenticated. Reminder delivery uses Resend through `RESEND_API_KEY` and `REMINDER_FROM_EMAIL`. The database delivery log suppresses repeat sends and records failed attempts for retry.
+
 ## Plans in the MVP
 
 | Plan | Product hypothesis |
@@ -150,7 +161,7 @@ See [`docs/SECURITY.md`](docs/SECURITY.md) and [`docs/ARCHITECTURE.md`](docs/ARC
 
 Sprint 1 includes the marketing site, authentication, tenant model, AI register, scoring, dashboard, actions, evidence view, SEO/social metadata, Vercel Analytics, and admin surface.
 
-Sprint 2 now includes edit/detail screens, append-only review history, private evidence uploads, a database-backed activity log, team invitations/roles, and CSV import/export. The remaining Sprint 2 item is reminder email workflows before moving into billing and assurance-pack generation.
+Sprint 2 now includes edit/detail screens, append-only review history, private evidence uploads, a database-backed activity log, team invitations/roles, and CSV import/export. Sprint 2 retention work is complete: edit/detail screens, review history, private evidence, audit activity, team invitations/roles, CSV import/export, and scheduled review reminders. The next phase is monetization: billing and assurance-pack generation.
 
 ## License
 
