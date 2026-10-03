@@ -44,7 +44,12 @@ export default async function Systems() {
             {systems.map((system) => (
               <tr key={system.id}>
                 <td>
-                  <div className="font-semibold">{system.name}</div>
+                  <Link
+                    href={`/app/systems/${system.id}`}
+                    className="font-semibold text-white hover:text-sky-300"
+                  >
+                    {system.name}
+                  </Link>
                   <div className="mt-1 max-w-md truncate text-xs text-slate-500">
                     {system.provider || "—"} · {system.purpose}
                   </div>
@@ -52,7 +57,9 @@ export default async function Systems() {
                 <td>{system.owner_name || "—"}</td>
                 <td className="capitalize">{system.lifecycle}</td>
                 <td>
-                  <span className={`badge badge-${system.priority_level} capitalize`}>
+                  <span
+                    className={`badge badge-${system.priority_level} capitalize`}
+                  >
                     {system.priority_level} · {system.priority_score}
                   </span>
                 </td>
