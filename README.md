@@ -18,6 +18,7 @@ Aegistra helps small and mid-sized organizations document where AI is used, who 
 - Private evidence uploads with signed download links
 - Evidence-readiness view
 - Database-backed workspace activity/audit timeline
+- Workspace invitations with owner/admin/member/viewer roles
 - Separate platform-admin page (`/admin`)
 - Supabase Row Level Security (RLS)
 - Dynamic Open Graph social preview, sitemap, and robots metadata
@@ -136,6 +137,7 @@ Billing is intentionally not wired in Sprint 1. The plan model is present so pay
 - The MVP stores governance metadata rather than production prompts/model traffic.
 - Evidence files are stored in a private Supabase Storage bucket with workspace-scoped RLS and expiring signed URLs.
 - Audit events are written automatically by Postgres triggers for key governance changes.
+- Viewer access is read-only at the database policy layer; member/admin/owner permissions are enforced with RLS.
 
 See [`docs/SECURITY.md`](docs/SECURITY.md) and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
