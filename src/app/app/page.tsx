@@ -82,9 +82,10 @@ export default async function Dashboard() {
           <div className="mt-4 space-y-2">
             {systems.length ? (
               systems.map((system) => (
-                <div
+                <Link
+                  href={`/app/systems/${system.id}`}
                   key={system.id}
-                  className="flex items-center justify-between rounded-xl border border-white/5 p-4"
+                  className="flex items-center justify-between rounded-xl border border-white/5 p-4 transition hover:border-sky-400/30 hover:bg-white/[0.03]"
                 >
                   <div>
                     <div className="font-semibold">{system.name}</div>
@@ -93,10 +94,12 @@ export default async function Dashboard() {
                       {system.owner_name || "No owner"}
                     </div>
                   </div>
-                  <span className={`badge badge-${system.priority_level} capitalize`}>
+                  <span
+                    className={`badge badge-${system.priority_level} capitalize`}
+                  >
                     {system.priority_level} · {system.priority_score}
                   </span>
-                </div>
+                </Link>
               ))
             ) : (
               <div className="rounded-xl border border-dashed border-white/10 p-8 text-center text-slate-500">
