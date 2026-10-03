@@ -6,6 +6,7 @@
 - Keep evidence files in a private Supabase Storage bucket with workspace-scoped object policies.
 - Generate short-lived signed URLs for evidence downloads.
 - Write key audit events through database triggers rather than relying only on frontend logging.
+- Validate CSV imports server-side, enforce workspace RLS, cap imports at 500 rows / 2 MB, and reapply plan limits before batch insert.
 - Keep SUPABASE_SECRET_KEY server-only.
 - Gate /admin with an authenticated email allow-list.
 - Use a non-exposed private schema for authorization helper functions.
