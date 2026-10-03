@@ -23,10 +23,10 @@ Status: in progress.
 - [x] Edit/detail screens
 - [x] Append-only review-history records
 - [ ] Team invitations
-- [ ] Evidence uploads
+- [x] Private evidence uploads
 - [ ] CSV import/export
 - [ ] Reminder emails
-- [ ] Audit/activity log
+- [x] Database-backed audit/activity log
 
 ## Sprint 3 — Monetization
 - Billing and plan enforcement
