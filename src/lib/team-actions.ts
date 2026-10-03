@@ -15,11 +15,6 @@ export type InviteState = {
   role?: "admin" | "member" | "viewer";
 };
 
-export const initialInviteState: InviteState = {
-  ok: false,
-  error: null,
-};
-
 function hashToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
 }
