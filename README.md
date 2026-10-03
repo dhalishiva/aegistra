@@ -37,7 +37,8 @@ Current state:
 - Resend API/domain setup: **PENDING**
 - `CRON_SECRET` in Vercel: **PENDING**
 - Billing/payment processing: **not implemented yet**
-- Assurance-pack export: **not implemented yet**
+- Assurance-pack export: PDF and CSV (`/api/assurance`, buttons on the Evidence page)
+- Billing: Razorpay subscriptions, Team $5 and Business $10 per month (see `docs/BILLING_SETUP.md`)
 
 At the last production verification:
 

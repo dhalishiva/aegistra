@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Minus } from "lucide-react";
 
 export function Section({
   id,
@@ -65,7 +64,7 @@ export const faqs = [
   ],
   [
     "What does it cost?",
-    "The Free plan covers your first 3 AI systems. Team at $49 a month and Business at $149 a month are planned. Billing is not live yet.",
+    "The Free plan covers your first 3 AI systems. Team is $5 a month for up to 50 AI systems and Business is $10 a month with no limit. Pay by card or other methods Razorpay supports, and cancel any time.",
   ],
 ] as const;
 
@@ -74,8 +73,8 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
     <Section id="pricing">
       <Heading
         as={asPage ? "h1" : "h2"}
-        title="Start free. Paid plans are on the way."
-        lede="Billing is not live yet. Only the Free plan can be used today. Team and Business show planned pricing."
+        title="Start free. Upgrade when you outgrow it."
+        lede="Three AI systems are free. Team is $5 a month and Business is $10 a month. Cancel any time and keep access until the period ends."
       />
     
       <div className="table-wrap mt-10 max-w-4xl">
@@ -96,11 +95,11 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
               <th scope="row" className="px-4 py-4 text-left font-medium text-slate-300">Price</th>
               <td className="py-4 text-2xl font-bold">$0</td>
               <td className="py-4">
-                <span className="text-2xl font-bold">$49</span>
+                <span className="text-2xl font-bold">$5</span>
                 <span className="block text-xs text-slate-400">per month</span>
               </td>
               <td className="py-4">
-                <span className="text-2xl font-bold">$149</span>
+                <span className="text-2xl font-bold">$10</span>
                 <span className="block text-xs text-slate-400">per month</span>
               </td>
             </tr>
@@ -111,28 +110,16 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
               <td className="py-4 font-semibold">Unlimited</td>
             </tr>
             <tr>
-              <th scope="row" className="px-4 py-4 text-left font-medium text-slate-300">Assurance workflows</th>
-              <td className="py-4">
-                <Minus size={16} className="text-slate-500" aria-hidden="true" />
-                <span className="sr-only">Not included</span>
-              </td>
-              <td className="py-4">
-                <Minus size={16} className="text-slate-500" aria-hidden="true" />
-                <span className="sr-only">Not included</span>
-              </td>
-              <td className="py-4 text-slate-300">Planned</td>
+              <th scope="row" className="px-4 py-4 text-left font-medium text-slate-300">Assurance pack (PDF and CSV)</th>
+              <td className="py-4 text-slate-300">Included</td>
+              <td className="py-4 text-slate-300">Included</td>
+              <td className="py-4 text-slate-300">Included</td>
             </tr>
             <tr>
               <th scope="row" className="px-4 py-4 text-left font-medium text-slate-300">Availability</th>
-              <td className="py-4">
-                <span className="badge badge-low">Available now</span>
-              </td>
-              <td className="py-4">
-                <span className="badge">Planned</span>
-              </td>
-              <td className="py-4">
-                <span className="badge">Planned</span>
-              </td>
+              <td className="py-4"><span className="badge badge-low">Available now</span></td>
+              <td className="py-4"><span className="badge badge-low">Available now</span></td>
+              <td className="py-4"><span className="badge badge-low">Available now</span></td>
             </tr>
           </tbody>
         </table>
@@ -142,9 +129,17 @@ export function PricingSection({ asPage = false }: { asPage?: boolean }) {
         Every plan includes the register, priority scoring, overview, governance actions and readiness view.
         The plans differ in how many AI systems you can add.
       </p>
-      <Link href="/signup" className="btn-primary mt-6 px-6 py-3 text-base">
-        Create a free workspace
-      </Link>
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        <Link href="/signup" className="btn-primary px-6 py-3 text-base">
+          Create a free workspace
+        </Link>
+        <Link href="/app/settings#billing" className="btn-secondary px-6 py-3 text-base">
+          Upgrade an existing workspace
+        </Link>
+      </div>
+      <p className="mt-4 max-w-2xl text-sm text-slate-400">
+        Prices are in US dollars. Payments are handled by Razorpay. Only the workspace owner can change the plan.
+      </p>
     </Section>
   );
 }

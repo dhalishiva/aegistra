@@ -9,6 +9,8 @@ import {
   revokeWorkspaceInvitation,
   updateWorkspaceMemberRole,
 } from "@/lib/team-actions";
+import { BillingPanel } from "@/components/billing-panel";
+import { isBillingConfigured } from "@/lib/razorpay";
 import { createClient } from "@/lib/supabase-server";
 import { getSessionContext } from "@/lib/workspace";
 
@@ -38,6 +40,11 @@ type Invitation = {
 export default async function Settings() {
   const { supabase, user, workspace, membership } = await getSessionContext();
   const canManage = membership.role === "owner" || membership.role === "admin";
+  const { data: billing } = await supabase
+    .from("workspaces")
+    .select("billing_status,billing_period_end")
+    .eq("id", workspace.id)
+    .maybeSingle();
 
   const membersResult = await supabase.rpc("workspace_member_directory", {
     p_workspace_id: workspace.id,
@@ -306,6 +313,14 @@ export default async function Settings() {
           )}
         </section>
       )}
+
+      <BillingPanel
+        plan={workspace.plan}
+        status={billing?.billing_status ?? null}
+        periodEnd={billing?.billing_period_end ?? null}
+        isOwner={membership.role === "owner"}
+        configured={isBillingConfigured()}
+      />
 
       <div className="mt-5 flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.025] p-4">
         <div>

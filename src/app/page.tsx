@@ -148,6 +148,8 @@ const roadmap = [
       "Private evidence uploads",
       "CSV import and export",
       "Activity log",
+      "Assurance pack export (PDF and CSV)",
+      "Paid plans with Razorpay billing",
     ],
   },
   {
@@ -155,8 +157,6 @@ const roadmap = [
     tone: "",
     items: [
       "Review reminder emails (built, switching on soon)",
-      "Billing and plan limits",
-      "Assurance-pack export",
     ],
   },
   {
@@ -352,11 +352,8 @@ export default function Home() {
               ]}
               note={
                 <>
-                  Evidence packs are planned. See the{" "}
-                  <Link href="#roadmap" className="text-sky-300 underline underline-offset-4">
-                    roadmap
-                  </Link>
-                  .
+                  Download the whole register, reviews, actions and evidence as a PDF assurance pack or CSV files from
+                  the Evidence page.
                 </>
               }
               screen={<ReadinessScreen />}
