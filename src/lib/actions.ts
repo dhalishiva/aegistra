@@ -279,3 +279,131 @@ export async function markActionDone(formData: FormData) {
   if (error) throw error;
   revalidatePath("/app/actions");
 }
+
+
+const evidenceMimeTypes = new Set([
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "text/plain",
+  "text/csv",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+]);
+
+export async function uploadEvidence(formData: FormData) {
+  const { supabase, user } = await authed();
+
+  const { data: member, error: memberError } = await supabase
+    .from("workspace_members")
+    .select("workspace_id")
+    .eq("user_id", user.id)
+    .limit(1)
+    .single();
+
+  if (memberError || !member) {
+    throw memberError || new Error("No workspace");
+  }
+
+  const title = String(formData.get("title") || "").trim();
+  const notes = String(formData.get("notes") || "").trim();
+  const validUntil = String(formData.get("valid_until") || "") || null;
+  const aiSystemId = String(formData.get("ai_system_id") || "") || null;
+  const file = formData.get("file");
+
+  if (!title) throw new Error("Evidence title is required");
+  if (!(file instanceof File) || file.size === 0) {
+    throw new Error("Choose a file to upload");
+  }
+  if (file.size > 15 * 1024 * 1024) {
+    throw new Error("Evidence files must be 15 MB or smaller");
+  }
+  if (!evidenceMimeTypes.has(file.type)) {
+    throw new Error("Unsupported evidence file type");
+  }
+
+  if (aiSystemId) {
+    const { data: system } = await supabase
+      .from("ai_systems")
+      .select("id")
+      .eq("id", aiSystemId)
+      .eq("workspace_id", member.workspace_id)
+      .maybeSingle();
+
+    if (!system) throw new Error("Selected AI system is not in this workspace");
+  }
+
+  const safeName =
+    file.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 120) || "evidence";
+  const folder = aiSystemId || "general";
+  const storagePath =
+    `${member.workspace_id}/${folder}/${crypto.randomUUID()}-${safeName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("evidence")
+    .upload(storagePath, await file.arrayBuffer(), {
+      contentType: file.type,
+      upsert: false,
+    });
+
+  if (uploadError) throw uploadError;
+
+  const { error: insertError } = await supabase.from("evidence_items").insert({
+    workspace_id: member.workspace_id,
+    ai_system_id: aiSystemId,
+    title,
+    evidence_type: "file",
+    storage_path: storagePath,
+    file_name: file.name,
+    mime_type: file.type,
+    file_size: file.size,
+    notes: notes || null,
+    valid_until: validUntil,
+    created_by: user.id,
+  });
+
+  if (insertError) {
+    await supabase.storage.from("evidence").remove([storagePath]);
+    throw insertError;
+  }
+
+  revalidatePath("/app/evidence");
+  revalidatePath("/app/activity");
+}
+
+export async function deleteEvidence(formData: FormData) {
+  const { supabase } = await authed();
+  const id = String(formData.get("id") || "");
+
+  if (!id) throw new Error("Evidence id is required");
+
+  const { data: evidence, error: evidenceError } = await supabase
+    .from("evidence_items")
+    .select("id,storage_path")
+    .eq("id", id)
+    .single();
+
+  if (evidenceError || !evidence) {
+    throw evidenceError || new Error("Evidence not found");
+  }
+
+  if (evidence.storage_path) {
+    const { error: storageError } = await supabase.storage
+      .from("evidence")
+      .remove([evidence.storage_path]);
+
+    if (storageError) throw storageError;
+  }
+
+  const { error: deleteError } = await supabase
+    .from("evidence_items")
+    .delete()
+    .eq("id", id);
+
+  if (deleteError) throw deleteError;
+
+  revalidatePath("/app/evidence");
+  revalidatePath("/app/activity");
+}
