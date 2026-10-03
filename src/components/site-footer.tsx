@@ -8,14 +8,14 @@ const columns = [
       ["What's inside", "/#product"],
       ["Priority scoring", "/#scoring"],
       ["How it works", "/#how"],
-      ["Pricing", "/#pricing"],
+      ["Pricing", "/pricing"],
       ["Roadmap", "/#roadmap"],
     ],
   },
   {
     title: "Trust",
     links: [
-      ["Security", "/#security"],
+      ["Security", "/security"],
       ["Privacy notice", "/privacy"],
       ["Terms of service", "/terms"],
     ],

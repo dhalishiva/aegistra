@@ -2,7 +2,9 @@ import Link from "next/link";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 
-export const metadata = { title: "Reset your password — Aegistra" };
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Reset your password", robots: { index: false, follow: false } };
 
 export default function ForgotPassword() {
   return (

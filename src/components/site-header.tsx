@@ -7,8 +7,8 @@ export const siteLinks = [
   ["Product", "/#product"],
   ["Scoring", "/#scoring"],
   ["How it works", "/#how"],
-  ["Pricing", "/#pricing"],
-  ["Security", "/#security"],
+  ["Pricing", "/pricing"],
+  ["Security", "/security"],
   ["Roadmap", "/#roadmap"],
 ] as const;
 

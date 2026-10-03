@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { createWorkspace } from "@/lib/actions";
 import { AuthShell } from "@/components/auth/auth-shell";
+
+export const metadata: Metadata = {
+  title: "Workspace setup",
+  robots: { index: false, follow: false },
+};
 
 export default function Onboarding() {
   return (

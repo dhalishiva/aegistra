@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { getSiteUrl } from "@/lib/site-url";
@@ -7,12 +7,21 @@ import "./globals.css";
 
 const siteUrl = getSiteUrl();
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#EEF1F8" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A1016" },
+  ],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: "Aegistra — AI governance for small teams",
     template: "%s | Aegistra",
   },
+  applicationName: "Aegistra",
+  keywords: ["AI governance", "AI register", "AI inventory", "AI risk register", "AI vendor questionnaire"],
   description:
     "Keep a living register of AI systems, owners, reviews, actions and evidence without enterprise GRC complexity.",
   openGraph: {
