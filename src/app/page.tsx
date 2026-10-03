@@ -138,6 +138,15 @@ const steps = [
   ],
 ] as const;
 
+const alsoInApp = [
+  ["System detail and edit", "Open any system to change its answers, owner or review date. The score updates with it."],
+  ["Review history", "Record each review as approved, changes required or paused, with notes and the next due date."],
+  ["Team invitations and roles", "Invite teammates as admin, member or viewer. Viewers can read but not change anything."],
+  ["Private evidence", "Attach links, notes, decisions or files (PDF, images, Office documents, up to 15 MB) to a system. Files are stored privately."],
+  ["CSV import and export", "Download a template, import many systems at once, or export the whole register."],
+  ["Activity log", "See who added, changed or removed systems, actions, evidence and members, and when."],
+] as const;
+
 const roles = [
   "Founders and COOs",
   "Security leads",
@@ -177,27 +186,27 @@ const roadmap = [
       "Governance actions",
       "Readiness view",
       "Isolated workspaces",
+      "System detail and edit screens",
+      "Review history",
+      "Team invitations and roles",
+      "Private evidence uploads",
+      "CSV import and export",
+      "Activity log",
     ],
   },
   {
     stage: "Next",
     tone: "",
     items: [
-      "Edit and detail screens",
-      "Review history",
-      "Team invitations",
-      "Evidence uploads",
-      "CSV import and export",
-      "Reminder emails",
-      "Activity log",
+      "Review reminder emails (built, switching on soon)",
+      "Billing and plan limits",
+      "Assurance-pack export",
     ],
   },
   {
     stage: "After that",
     tone: "",
     items: [
-      "Billing and plan limits",
-      "Assurance-pack export",
       "Answer library for security questionnaires",
       "Framework references and control mapping",
       "Security hardening for paid launch",
@@ -219,7 +228,7 @@ const notYet = [
   "It is not legal advice, a certification or a legal risk classification.",
   "It does not watch your AI traffic or prompts.",
   "It does not discover AI tools for you. You add the systems you know about.",
-  "It does not take file uploads, single sign-on or framework mapping yet.",
+  "It does not offer single sign-on or framework mapping yet.",
 ] as const;
 
 const faqs = [
@@ -237,7 +246,7 @@ const faqs = [
   ],
   [
     "Can we invite teammates or import a spreadsheet?",
-    "Not yet. Team invitations and CSV import and export are planned next. Today one person sets up the workspace and adds the systems.",
+    "Yes. Owners and admins can invite teammates as admin, member or viewer, and you can import systems from a CSV file or export your register as CSV.",
   ],
   [
     "What does it cost?",
@@ -369,7 +378,7 @@ export default function Home() {
               ]}
               note={
                 <>
-                  Evidence file uploads and evidence packs are planned. See the{" "}
+                  Evidence packs are planned. See the{" "}
                   <Link href="#roadmap" className="text-sky-300 underline underline-offset-4">
                     roadmap
                   </Link>
@@ -381,6 +390,18 @@ export default function Home() {
               The readiness view shows which systems have an owner and a review date and which do not, so you can
               fix gaps before a customer or auditor finds them.
             </FeatureRow>
+          </div>
+
+          <div className="mt-16 border-t border-white/10 pt-12">
+            <h3 className="text-2xl font-bold tracking-tight">Also in the app</h3>
+            <dl className="mt-6 grid gap-x-12 sm:grid-cols-2">
+              {alsoInApp.map(([term, text]) => (
+                <div key={term} className="border-b border-white/10 py-5">
+                  <dt className="font-semibold">{term}</dt>
+                  <dd className="mt-1 text-sm leading-6 text-slate-300">{text}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </Section>
 
