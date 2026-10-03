@@ -1,1 +1,11 @@
-import type { MetadataRoute } from "next"; const base=process.env.NEXT_PUBLIC_SITE_URL||"http://localhost:3000"; export default function sitemap():MetadataRoute.Sitemap{return ["","/privacy","/terms","/login","/signup"].map(path=>({url:`${base}${path}`,lastModified:new Date()}))}
+import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/site-url";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const base = getSiteUrl();
+
+  return ["", "/privacy", "/terms", "/login", "/signup"].map((path) => ({
+    url: `${base}${path}`,
+    lastModified: new Date(),
+  }));
+}
