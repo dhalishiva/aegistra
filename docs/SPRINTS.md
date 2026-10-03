@@ -19,13 +19,14 @@ Status: implemented.
 - Supabase RLS
 
 ## Sprint 2 — Retention
-- Edit/detail screens
-- Review-history records
-- Team invitations
-- Evidence uploads
-- CSV import/export
-- Reminder emails
-- Audit/activity log
+Status: in progress.
+- [x] Edit/detail screens
+- [x] Append-only review-history records
+- [ ] Team invitations
+- [ ] Evidence uploads
+- [ ] CSV import/export
+- [ ] Reminder emails
+- [ ] Audit/activity log
 
 ## Sprint 3 — Monetization
 - Billing and plan enforcement
