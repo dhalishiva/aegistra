@@ -2,150 +2,340 @@
 
 **Lightweight AI governance for teams that need a living AI register without an enterprise GRC rollout.**
 
-Aegistra helps small and mid-sized organizations document where AI is used, who owns each use case, what needs review, which governance actions are still open, and which evidence supports governance decisions.
+Aegistra helps small and mid-sized organizations keep track of where AI is being used, who owns each use case, what needs review, which governance actions are open, and what evidence supports internal decisions or customer-assurance responses.
 
-> **Important:** Aegistra is a governance workflow and system-of-record product. It does **not** provide legal advice, certification, regulatory approval, or statutory AI-risk classification.
+> Aegistra organizes governance work. It does **not** provide legal advice, certification, statutory AI-risk classification, or runtime inspection of prompts/model traffic.
 
 ---
 
-## Live application
+## Current project status
 
-Production:
+Aegistra is live at:
 
 ```text
 https://aegistra.vercel.app/
 ```
 
-Primary repository:
+Repository:
 
 ```text
 https://github.com/dhalishiva/aegistra
 ```
 
-Current infrastructure:
+Current state:
 
-- **Frontend / server:** Next.js App Router + TypeScript
-- **UI:** Tailwind CSS + Lucide icons
-- **Database / Auth / Storage:** Supabase
-- **Hosting:** Vercel
-- **Analytics:** Vercel Web Analytics
-- **Transactional email integration prepared for:** Resend
-- **Scheduled reminders:** Vercel Cron
+- Marketing website: **live**
+- Authenticated customer app: **live**
+- Platform admin page: **implemented**
+- Supabase database/RLS: **implemented**
+- Private evidence storage: **implemented**
+- Team invitations/roles: **implemented**
+- CSV import/export: **implemented**
+- Review reminder workflow code: **implemented**
+- Daily Vercel cron declaration: **implemented in `vercel.json`**
+- Transactional email delivery: **NOT ACTIVATED YET**
+- Resend API/domain setup: **PENDING**
+- `CRON_SECRET` in Vercel: **PENDING**
+- Billing/payment processing: **not implemented yet**
+- Assurance-pack export: **not implemented yet**
 
----
+At the last production verification:
 
-# Product overview
-
-Aegistra is designed to become the operating record for an organization's AI usage.
-
-The product currently lets a company:
-
-- maintain a register of AI systems and AI-enabled use cases;
-- assign an owner to every system;
-- record purpose, provider, lifecycle, data sensitivity, autonomy and business impact;
-- calculate a transparent governance-priority score;
-- schedule reviews;
-- record append-only review history;
-- track governance actions;
-- upload private supporting evidence;
-- maintain an automatic audit trail;
-- invite teammates with role-based access;
-- import/export AI inventories using CSV;
-- configure automated review-reminder workflows;
-- operate an internal platform-admin surface;
-- expose a separate public marketing site.
-
-The MVP intentionally stores **governance metadata**, not production prompts or model traffic.
+- the latest Vercel build was successful,
+- the production alias pointed to `aegistra.vercel.app`,
+- Vercel reported no runtime errors,
+- Supabase security advisor reported no security findings.
 
 ---
 
-# Current implementation status
+# Product purpose
 
-## Sprint 0 — Product validation and market positioning
+The core problem Aegistra addresses is that many organizations adopt AI tools faster than they create an internal governance process.
 
-**Status: product direction defined; external customer validation still ongoing.**
+Aegistra is intended to become the team's lightweight system of record for:
 
-Aegistra was selected after comparing several SaaS opportunities including:
+- which AI systems/use cases exist,
+- which provider/product is involved,
+- what the AI system is used for,
+- who owns it,
+- which data sensitivity level applies,
+- how autonomous the system is,
+- what potential business impact exists,
+- whether human review is present,
+- whether the system interacts with customers/public users,
+- whether it generates externally visible content,
+- when the system was last reviewed,
+- when the next review is due,
+- which governance actions remain open,
+- which evidence/documents support the governance decision,
+- which teammate made important changes,
+- and whether scheduled reviews are approaching or overdue.
 
-- LLM observability / AI cost monitoring;
-- SaaS renewal management;
-- compliance automation;
-- AI governance and AI inventory tooling.
+The product intentionally uses a **governance-priority score** instead of pretending to make a legal/statutory classification.
 
-The selected wedge is:
+---
 
-> **A living AI register for teams too small for enterprise GRC.**
+# Target customer
 
-Initial target customer:
+Initial ICP:
 
-- 10–250 employee B2B SaaS companies;
-- agencies;
-- consultancies;
-- professional-services companies;
-- especially organizations selling to US/EU customers.
+- 10–250 employee organizations
+- B2B SaaS companies
+- agencies
+- consultancies
+- professional-services businesses
+- companies selling into US/EU enterprise customers
 
-Likely buyers:
+Likely buyers/users:
 
-- Founder / COO;
-- Security lead;
-- Privacy / compliance lead;
-- IT lead;
-- Fractional CISO.
+- founders
+- COO/operations
+- security leads
+- privacy/compliance leads
+- IT leads
+- fractional CISOs
+- consultants/MSPs managing governance for clients
 
-Initial pricing hypothesis:
+---
 
-| Plan | Current product hypothesis |
+# Technology stack
+
+| Area | Technology |
 |---|---|
-| Free | $0, up to 3 AI systems |
-| Team | $49/month, up to 50 AI systems |
-| Business | $149/month, larger governance / assurance workflows |
+| Frontend | Next.js App Router |
+| Language | TypeScript |
+| UI | React + Tailwind CSS |
+| Icons | Lucide |
+| Authentication | Supabase Auth |
+| Database | Supabase Postgres |
+| Authorization | Postgres Row Level Security |
+| File storage | Private Supabase Storage |
+| Hosting | Vercel |
+| Analytics | Vercel Web Analytics |
+| Scheduled jobs | Vercel Cron |
+| Transactional email adapter | Resend REST API |
+| CI/build validation | GitHub Actions + Vercel builds |
 
-Billing is **not implemented yet**. These prices are still hypotheses to validate before paid launch.
+The app currently stays deliberately infrastructure-light so it can be operated as a small SaaS without managing dedicated servers.
+
+---
+
+# High-level architecture
+
+```text
+Browser
+   |
+   v
+Next.js / Vercel
+   |
+   +----------------------+
+   |                      |
+   v                      v
+Supabase Auth        Server-side routes/actions
+   |                      |
+   v                      v
+Supabase Postgres    Supabase service-role access
+   |                      |
+   +---- RLS -------------+
+   |
+   +--> Private Supabase Storage
+```
+
+For scheduled reminders:
+
+```text
+Vercel Cron
+   |
+   v
+/api/cron/review-reminders
+   |
+   +--> Supabase reminder settings
+   +--> AI systems with review dates
+   +--> delivery de-duplication log
+   |
+   v
+Resend API
+   |
+   v
+AI-system owner email
+```
+
+The cron/email path is implemented but **not production-active yet** because the required Vercel/Resend secrets have not been configured.
+
+---
+
+# Main application routes
+
+| Route | Purpose |
+|---|---|
+| `/` | Public marketing homepage |
+| `/privacy` | Privacy page |
+| `/terms` | Terms page |
+| `/login` | Login |
+| `/signup` | Signup |
+| `/auth/callback` | Supabase PKCE/email-confirmation callback |
+| `/onboarding` | First workspace creation |
+| `/invite/[token]` | Secure workspace invitation acceptance |
+| `/app` | Customer dashboard |
+| `/app/systems` | AI system register |
+| `/app/systems/new` | Create an AI-system record |
+| `/app/systems/[id]` | AI-system detail/edit/review history |
+| `/app/actions` | Governance action queue |
+| `/app/evidence` | Private assurance evidence library |
+| `/app/activity` | Workspace audit/activity timeline |
+| `/app/settings` | Workspace, members, roles, invitations and reminders |
+| `/admin` | Internal Aegistra platform-admin page |
+| `/api/systems/template` | Download blank CSV import template |
+| `/api/systems/export` | Authenticated workspace CSV export |
+| `/api/cron/review-reminders` | Secured daily review-reminder worker |
+
+---
+
+# Workspace roles and authorization model
+
+Aegistra currently supports four workspace roles.
+
+## Owner
+
+Highest workspace permission level.
+
+Can:
+
+- perform all governance work,
+- invite admins,
+- invite members/viewers,
+- change admin/member/viewer roles,
+- remove non-owner members,
+- manage reminder settings.
+
+The owner cannot accidentally demote/remove themselves through the normal member-management UI/policies.
+
+## Admin
+
+Can:
+
+- perform normal governance work,
+- invite members/viewers,
+- manage members/viewers,
+- manage reminder settings.
+
+Admins cannot promote other users to Admin and cannot modify/remove the Owner.
+
+## Member
+
+Can:
+
+- create/update AI systems,
+- record system reviews,
+- create/update governance actions,
+- upload/delete evidence,
+- import AI systems.
+
+Members cannot administer workspace access.
+
+## Viewer
+
+Read-only governance access.
+
+Viewer write restrictions are enforced at the **database RLS layer**, not merely hidden in the frontend.
+
+---
+
+# Sprint history / implementation log
+
+This section is intended as the detailed engineering handoff.
+
+## Sprint 0 — Market validation and product definition
+
+### Goal
+
+Identify a subscription SaaS opportunity that:
+
+- solves a real operational problem,
+- has recurring value,
+- can sell into higher-value US/EU markets,
+- is not dependent on ads,
+- can start self-serve,
+- and does not require enterprise-scale infrastructure to launch.
+
+### Categories considered
+
+The research phase considered areas including:
+
+- LLM observability/cost monitoring,
+- SaaS renewal/spend management,
+- compliance automation,
+- AI governance/system inventory.
+
+### Product selected
+
+The selected wedge was a lightweight **AI system register + governance workflow** for organizations that are too small to justify a complex enterprise GRC implementation.
+
+### Positioning
+
+Primary positioning:
+
+> **Know where AI is used. Know who owns it.**
+
+Secondary positioning:
+
+> A living AI register for teams too small for enterprise GRC.
+
+### Product guardrail established
+
+Aegistra would **not** attempt to make a statutory/legal AI classification.
+
+Instead it would calculate an internal governance-priority score used only to help teams decide what should be reviewed first.
+
+### Initial pricing hypothesis
+
+The current data model contains plan concepts:
+
+| Plan | Hypothesis |
+|---|---|
+| Free | up to 3 AI systems |
+| Team | $49/month, up to 50 AI systems |
+| Business | $149/month, larger workflows |
+| Enterprise | reserved for future use |
+
+Billing itself has deliberately not been connected yet.
 
 ---
 
 # Sprint 1 — Core MVP
 
-**Status: implemented and deployed.**
+**Status: implemented and deployed**
 
-Sprint 1 established the complete application foundation.
+Sprint 1 established the complete product foundation.
 
 ## 1. Public marketing website
 
-The root application contains a separate public-facing marketing site.
+Implemented a separate public-facing sales/marketing surface rather than mixing marketing and authenticated product pages.
 
-Implemented:
+Includes:
 
-- product positioning;
-- hero section;
-- product feature sections;
-- explanation of how Aegistra works;
-- pricing hypothesis section;
-- security positioning;
-- signup / login calls-to-action;
-- public footer;
-- privacy page;
-- terms page.
+- hero/product messaging,
+- product explanation,
+- pricing hypothesis,
+- security messaging,
+- CTA flows,
+- Privacy page,
+- Terms page.
 
-Routes include:
+The legal pages are product placeholders and still require proper legal review before a serious paid launch.
 
-```text
-/
- /privacy
- /terms
- /login
- /signup
-```
+## 2. Branding
 
-The legal pages are intentionally MVP drafts and should receive proper legal review before commercial launch.
+Created Aegistra branding including:
 
----
+- shield/network-style logo,
+- reusable logo component,
+- SVG mark,
+- browser favicon assets,
+- ICO and PNG favicon variants,
+- Apple touch icon.
 
-## 2. Branding, logo and favicon
-
-Aegistra has a custom shield/network-style logo and favicon treatment.
-
-Implemented favicon assets include:
+Current favicon assets include:
 
 ```text
 /favicon.ico
@@ -157,279 +347,211 @@ Implemented favicon assets include:
 /aegistra-mark.svg
 ```
 
-Next.js metadata explicitly declares ICO, PNG and SVG formats.
-
-This was added because Vercel/browser surfaces do not always treat SVG favicons consistently.
-
----
-
 ## 3. SEO and social sharing
 
-Implemented:
+Added:
 
-- Next.js metadata;
-- canonical site metadata through `NEXT_PUBLIC_SITE_URL`;
-- Open Graph metadata;
-- Twitter card metadata;
-- dynamic social preview image;
-- sitemap;
-- robots rules;
-- favicon metadata.
+- Next.js metadata,
+- Open Graph metadata,
+- Twitter/X card metadata,
+- dynamic Open Graph social image,
+- sitemap,
+- robots metadata,
+- canonical production-site support via `NEXT_PUBLIC_SITE_URL`.
 
-Routes such as private app/admin pages are excluded from normal indexing.
-
----
+This also ensures links shared through WhatsApp/LinkedIn can display a branded social preview.
 
 ## 4. Vercel Analytics
 
-Vercel Web Analytics is already integrated in:
+Vercel Web Analytics is mounted globally through the root layout.
 
-```text
-src/app/layout.tsx
-```
-
-using:
-
-```tsx
-@vercel/analytics/react
-```
-
-The application is already deployed on Vercel and production builds are triggered from the GitHub `main` branch.
-
----
+No additional page-level analytics code is required for basic traffic collection.
 
 ## 5. Authentication
 
-Authentication uses Supabase Auth.
+Implemented Supabase email/password authentication.
 
-Implemented:
+Includes:
 
-- email/password signup;
-- email/password login;
-- email-confirmation support;
-- PKCE callback handling;
-- safe redirect handling;
-- protected routes;
-- sign out.
-
-Important route:
-
-```text
-/auth/callback
-```
-
-Invite destinations and protected destinations are preserved through login/signup flows.
-
----
+- signup,
+- login,
+- email-confirmation callback,
+- PKCE-compatible callback route,
+- safe `next=` redirects,
+- support for preserving invitation links through signup/email confirmation.
 
 ## 6. Workspace onboarding
 
-A new authenticated user can create a workspace.
+A new user can create a workspace during onboarding.
 
-The creator automatically becomes:
+The creator becomes the workspace Owner.
 
-```text
-role = owner
-```
+Workspace records form the tenancy boundary for customer-owned data.
 
-The onboarding flow creates:
+## 7. Multi-tenant data architecture
 
-- workspace;
-- workspace membership;
-- profile record.
+Customer-owned records carry a `workspace_id`.
 
----
+Tenant isolation is enforced using Supabase/Postgres RLS instead of trusting frontend query filters.
 
-## 7. Multi-tenant architecture
+Authorization helper functions are stored in a non-exposed `private` schema.
 
-Aegistra is multi-tenant.
+## 8. AI system register
 
-Most customer data is linked to:
+Implemented the main AI inventory.
 
-```text
-workspace_id
-```
+Each AI-system record supports fields such as:
 
-Tenant isolation is enforced in Supabase/Postgres using **Row Level Security** rather than relying on frontend filtering.
+- name,
+- provider,
+- purpose,
+- owner name,
+- owner email,
+- lifecycle,
+- data sensitivity,
+- autonomy,
+- business impact,
+- human-review status,
+- public interaction,
+- generated-content exposure,
+- review due date,
+- notes.
 
-Private authorization helper functions live in a non-public Postgres schema.
-
-Important helpers include logic for:
-
-- workspace membership;
-- workspace admin access;
-- workspace owner access;
-- write permission.
-
----
-
-## 8. AI systems register
-
-The central MVP feature is the AI systems / use-case register.
-
-Each system can currently store:
-
-- name;
-- provider/product;
-- business purpose;
-- owner name;
-- owner email;
-- lifecycle;
-- data sensitivity;
-- autonomy level;
-- potential impact;
-- human-review status;
-- public/customer interaction;
-- externally generated content flag;
-- review due date;
-- last reviewed date;
-- internal notes;
-- governance priority score;
-- governance priority level.
-
-Main routes:
+Lifecycle values currently include:
 
 ```text
-/app/systems
-/app/systems/new
-/app/systems/[id]
+pilot
+production
+paused
+retired
 ```
 
----
+## 9. Governance-priority score
 
-## 9. Governance-priority scoring
+Implemented a transparent internal scoring function.
 
-Aegistra calculates an internal governance-priority score from:
+The score currently considers:
 
-- data sensitivity;
-- autonomy;
-- impact;
-- presence/absence of human review;
-- public interaction;
-- externally visible generated content.
+- data sensitivity,
+- autonomy,
+- potential impact,
+- whether human review exists,
+- public/customer interaction,
+- externally generated content.
 
-Output:
+The score is converted into:
 
 ```text
-0–100 score
-low / medium / high priority
+low
+medium
+high
 ```
 
-This score is deliberately described as an **internal prioritization signal**, not a legal classification.
+priority levels.
 
-It is recalculated whenever the relevant governance inputs change.
+It is explicitly an **internal governance-priority signal**, not legal advice.
 
----
+## 10. Customer dashboard
 
-## 10. Application dashboard
+The authenticated dashboard shows:
 
-The authenticated dashboard shows a workspace overview.
-
-Current metrics include:
-
-- number of registered AI systems;
-- high-priority systems;
-- reviews due;
-- open governance actions.
-
-The dashboard also surfaces systems needing attention and links directly to system records.
-
-Route:
-
-```text
-/app
-```
-
----
+- total AI systems,
+- high-priority systems,
+- reviews due,
+- open actions,
+- systems needing attention,
+- recent/open governance actions.
 
 ## 11. Governance actions
 
-Users can create governance action items with:
+Implemented an action queue for governance follow-up.
 
-- title;
-- owner;
-- due date;
-- status.
+Users can:
 
-Actions can be completed from the app.
+- create actions,
+- assign an owner text value,
+- set due dates,
+- mark actions complete.
 
-Route:
+## 12. Evidence-readiness foundation
 
-```text
-/app/actions
-```
+Sprint 1 initially added an evidence/readiness view so the product could identify whether systems had:
 
----
+- ownership,
+- review dates,
+- basic assurance readiness.
 
-## 12. Internal platform-admin surface
+Sprint 2 later expanded this into real private file storage.
 
-A separate internal admin surface exists at:
+## 13. Internal platform admin
 
-```text
-/admin
-```
+Added a separate `/admin` surface.
 
-Access is restricted using:
+It is gated by:
 
-```text
-ADMIN_EMAILS
-```
+- Supabase authentication,
+- the `ADMIN_EMAILS` environment variable.
 
-The page uses the server-only Supabase secret key and exposes high-level platform information such as:
+The admin route uses the server-only Supabase secret key.
 
-- workspace count;
-- AI-system count;
-- membership count;
-- recent workspaces.
+It currently provides platform-level counts and recent workspace visibility.
 
-The Supabase secret key must never be exposed through a `NEXT_PUBLIC_` variable.
+## 14. Initial security baseline
+
+Implemented:
+
+- RLS on customer-facing tables,
+- server-only service-role key handling,
+- private authorization helper schema,
+- tenant-scoped queries,
+- HTTPS through Vercel,
+- security headers,
+- protected internal admin route.
 
 ---
 
 # Sprint 2 — Retention and collaboration
 
-**Status: feature implementation complete.**
+**Status: application code implemented**
 
-Sprint 2 turned the original register into an ongoing governance workflow.
+Sprint 2 turned the MVP from a register into an ongoing governance workflow.
 
----
+## Sprint 2A — AI-system detail/edit + review history
 
-## 1. AI-system detail and editing
+### AI-system detail pages
 
-Every AI-system record is now clickable.
-
-Users can edit:
-
-- name;
-- provider;
-- purpose;
-- owner;
-- lifecycle;
-- review date;
-- governance inputs;
-- notes.
-
-Changing governance inputs recalculates the governance-priority score.
-
-Route:
+Each AI-system row now opens a dedicated record:
 
 ```text
 /app/systems/[id]
 ```
 
----
+Users can edit:
 
-## 2. Append-only review history
+- system name,
+- provider,
+- purpose,
+- owner,
+- lifecycle,
+- next review date,
+- governance inputs,
+- internal notes.
 
-A formal review workflow was added.
+Changing governance inputs recalculates the priority score.
 
-Users can record:
+### Formal review workflow
 
-- review outcome;
-- review notes;
-- next review date.
+Added an append-only `system_reviews` table.
 
-Supported outcomes include:
+A review can record:
+
+- reviewer,
+- review date,
+- outcome,
+- notes,
+- next review due date.
+
+Supported outcomes:
 
 ```text
 approved
@@ -437,47 +559,26 @@ changes_required
 paused
 ```
 
-Recording a review:
+If a review outcome is `paused`, the AI-system lifecycle is also changed to paused.
 
-- creates an append-only review-history row;
-- updates `last_reviewed`;
-- updates `review_due`;
-- pauses the system when the review outcome is `paused`.
-
-The review-history table is:
-
-```text
-system_reviews
-```
-
-Review history is shown on each AI-system detail page.
+Review history remains visible on the system detail page.
 
 ---
 
-## 3. Private evidence storage
+## Sprint 2B — Private evidence library
 
-Aegistra supports real evidence-file uploads.
+The original readiness view was upgraded into real evidence storage.
 
-Route:
+### Evidence uploads
 
-```text
-/app/evidence
-```
+Users can upload evidence such as:
 
-Evidence can be:
-
-- general workspace evidence; or
-- linked to a specific AI system.
-
-Supported file types currently include:
-
-- PDF;
-- PNG;
-- JPG/JPEG;
-- TXT;
-- CSV;
-- Word;
-- Excel.
+- PDF
+- PNG/JPG
+- TXT
+- CSV
+- Word documents
+- Excel files
 
 Maximum file size:
 
@@ -485,208 +586,163 @@ Maximum file size:
 15 MB
 ```
 
-Files are stored in a private Supabase Storage bucket:
+### Storage model
+
+Evidence files are stored in a private Supabase Storage bucket:
 
 ```text
 evidence
 ```
 
-Security characteristics:
+The bucket is not public.
 
-- bucket is private;
-- access is workspace-scoped;
-- Storage RLS checks workspace membership;
-- writes require write-capable roles;
-- downloads use signed URLs;
-- signed URLs expire after one hour.
+Storage object access is workspace-scoped through RLS.
 
-Evidence metadata stored in Postgres includes:
+### Evidence metadata
 
-- title;
-- related AI system;
-- storage path;
-- filename;
-- MIME type;
-- file size;
-- notes;
-- validity date;
-- creator.
+Each evidence record can store:
+
+- title,
+- related AI system,
+- file name,
+- MIME type,
+- file size,
+- notes,
+- validity/expiry date,
+- storage path,
+- uploader.
+
+### Downloads
+
+Evidence downloads use short-lived signed URLs.
+
+The current UI generates one-hour signed links.
+
+### Deletion
+
+Authorized workspace writers can delete evidence.
+
+The storage object and corresponding metadata record are removed.
 
 ---
 
-## 4. Database-backed activity / audit timeline
+## Sprint 2C — Database-backed activity/audit trail
 
-Aegistra has a workspace activity timeline at:
+Added `activity_events`.
+
+The important design decision is that key events are created by **Postgres triggers**, rather than relying only on the browser/frontend to remember to log them.
+
+Current activity includes events such as:
+
+- AI system created,
+- AI system updated,
+- system reviewed,
+- action created,
+- action updated,
+- action completed,
+- evidence uploaded,
+- evidence deleted,
+- member invited,
+- invitation accepted,
+- invitation revoked,
+- member added,
+- member removed,
+- member role changed,
+- reminder settings updated,
+- review reminder sent.
+
+Users can view the latest workspace activity at:
 
 ```text
 /app/activity
 ```
 
-Important events are written by **Postgres triggers**, not just frontend code.
-
-Tracked events include:
-
-- AI system created;
-- AI system updated;
-- AI system reviewed;
-- governance action created;
-- governance action updated;
-- governance action completed;
-- evidence uploaded;
-- evidence deleted;
-- member invited;
-- invite accepted;
-- invite revoked;
-- workspace member added;
-- workspace member removed;
-- member role changed;
-- reminder settings updated;
-- reminder email sent.
-
-The table is:
-
-```text
-activity_events
-```
-
-This gives Aegistra a meaningful audit history even when data mutations come from different application paths.
-
 ---
 
-## 5. Team invitations
+## Sprint 2D — Team invitations and enforced roles
 
-Aegistra supports workspace invitations.
+Added secure workspace collaboration.
 
-Workspace owners/admins can create invitation links from Settings.
+### Invitation creation
 
-Invitation properties include:
+Owner/Admin users can generate invitation links.
 
-- invited email;
-- role;
-- secure token hash;
-- inviting user;
-- expiry;
-- acceptance status.
+Invite properties include:
 
-Invitation links expire after:
+- target email,
+- target role,
+- workspace,
+- cryptographically random token,
+- hashed token stored in the database,
+- 7-day expiry,
+- inviter,
+- acceptance metadata.
 
-```text
-7 days
-```
+The plaintext invitation token is not stored in the database.
 
-Acceptance is handled by Postgres logic that verifies:
+### Acceptance
 
-- user is authenticated;
-- token is valid;
-- invitation is not expired;
-- invitation is not revoked;
-- invitation has not already been used;
-- authenticated email matches invited email;
-- account does not already belong to another workspace.
+Invitation acceptance is performed through a secured Postgres function.
 
-Important route:
+Acceptance verifies:
 
-```text
-/invite/[token]
-```
+1. user is authenticated,
+2. invitation token hash exists,
+3. invitation is not expired,
+4. invitation is not already accepted,
+5. invitation is not revoked,
+6. authenticated email matches the email that was invited,
+7. user is not already attached to another workspace.
 
-New users can:
+Only after those checks is membership created.
+
+### Signup + invitation flow
+
+A brand-new user can follow:
 
 ```text
 Invite link
-→ Create account
-→ Confirm email
-→ Return to invitation
-→ Accept
-→ Enter workspace
+  -> Signup
+  -> Email confirmation
+  -> Return to invite
+  -> Accept invitation
+  -> Enter workspace
 ```
+
+### Member-management controls
+
+Workspace Settings now support:
+
+- member directory,
+- member email/name,
+- current role,
+- role changes,
+- member removal,
+- pending invitations,
+- expired-invite indication,
+- invitation revocation.
+
+### Role hardening
+
+Invitation rows were hardened so normal users cannot mutate an existing invitation into a higher role through direct API calls.
+
+If an invitation needs to change, it should be revoked and recreated.
 
 ---
 
-## 6. Workspace roles
+## Sprint 2E — CSV import/export
 
-Current roles:
+Implemented migration tooling for teams already maintaining AI inventories in spreadsheets.
 
-| Role | Access |
-|---|---|
-| Owner | Full workspace control, including admins |
-| Admin | Governance work + member/viewer management |
-| Member | Normal governance work |
-| Viewer | Read-only |
+### CSV template
 
-The role model is enforced at the **database/RLS layer**.
-
-Viewer is therefore not merely a UI label.
-
-Viewers cannot write:
-
-- AI systems;
-- actions;
-- reviews;
-- evidence.
-
-Additional protections prevent normal admins from manipulating owner access.
-
-Invitation role escalation was also hardened so invite rows cannot simply be modified through the API after creation.
-
----
-
-## 7. Workspace Settings page
-
-The Settings page now contains:
-
-- workspace summary;
-- current plan;
-- member count;
-- current-user role;
-- workspace member directory;
-- role-change controls;
-- member-removal controls;
-- invitation generation;
-- pending invitations;
-- invitation revoke controls;
-- role explanation;
-- review-reminder settings;
-- reminder delivery history;
-- sign out.
-
-Route:
+Public template endpoint:
 
 ```text
-/app/settings
+/api/systems/template
 ```
 
----
-
-## 8. CSV import/export
-
-Aegistra supports bulk AI-register migration.
-
-Available from:
-
-```text
-/app/systems
-```
-
-Features:
-
-- downloadable template;
-- workspace export;
-- browser-side preview;
-- server-side validation;
-- duplicate detection;
-- plan-limit enforcement;
-- governance-score recalculation;
-- round-trip export/re-import support.
-
-Import limits:
-
-```text
-500 rows maximum
-2 MB maximum CSV file
-```
-
-Primary CSV columns:
+Supported import columns:
 
 ```text
 name
@@ -705,299 +761,338 @@ review_due
 notes
 ```
 
-Exports also include calculated/reference fields such as:
+### Import
+
+The AI Systems page includes CSV upload and preview.
+
+Safeguards include:
+
+- `.csv` only,
+- maximum 2 MB,
+- maximum 500 rows per import,
+- required column validation,
+- unknown column validation,
+- enum validation,
+- email validation,
+- date validation,
+- boolean normalization,
+- duplicate detection,
+- plan-limit enforcement,
+- server-side revalidation.
+
+Duplicate identity currently uses:
 
 ```text
-priority_score
-priority_level
-last_reviewed
+lower(name) + lower(provider)
 ```
 
-Duplicates are detected using:
+Duplicates inside the file and duplicates already present in the workspace are skipped.
+
+Governance scores are recalculated server-side rather than trusted from spreadsheet input.
+
+### Export
+
+Authenticated endpoint:
 
 ```text
-normalized system name + normalized provider
-```
-
-Existing duplicates and duplicates inside the imported file are skipped.
-
-Import plan limits are rechecked server-side immediately before insertion.
-
-Viewers can export but cannot import.
-
-Routes:
-
-```text
-/api/systems/template
 /api/systems/export
 ```
 
+Exports the workspace register to CSV.
+
+Exports include the normal input columns plus calculated/reference information such as:
+
+- priority score,
+- priority level,
+- last reviewed.
+
+The generated export can be fed back through the importer because calculated fields are tolerated but not trusted as inputs.
+
+Viewers may export, but cannot import.
+
 ---
 
-## 9. Review-reminder workflow
+## Sprint 2F — Scheduled review/reminder workflow
 
-The review-reminder feature is **implemented in code and database**, but transactional email delivery is **not activated yet** because the Resend/Vercel secrets have not been configured.
+### What has been implemented in code
 
-This distinction is important for anyone continuing development.
+Aegistra now contains a complete reminder workflow.
 
-### Implemented already
+Workspace Owner/Admin users can configure:
 
-Aegistra has:
+- whether reminders are enabled,
+- how many days before a review the reminder window starts,
+- whether overdue reminders continue,
+- how often overdue reminders repeat.
 
-- workspace reminder settings;
-- lead-time configuration;
-- enable/disable control;
-- optional overdue reminders;
-- overdue repeat cadence;
-- reminder-delivery history;
-- reminder deduplication;
-- failed-delivery logging;
-- Resend REST integration;
-- Resend idempotency keys;
-- daily cron route;
-- Vercel Cron configuration;
-- activity-log entries for successful sends.
-
-Tables:
+Reminder settings are stored in:
 
 ```text
 workspace_reminder_settings
+```
+
+Delivery attempts are stored in:
+
+```text
 review_reminder_deliveries
 ```
 
-Cron route:
+### Reminder worker
+
+Worker endpoint:
 
 ```text
 /api/cron/review-reminders
 ```
 
-Cron schedule currently defined in `vercel.json`:
+`vercel.json` declares a daily schedule:
 
 ```text
-0 8 * * *
-```
-
-This means the code is configured to run once daily at:
-
-```text
-08:00 UTC
+08:00 UTC every day
 ```
 
 The worker:
 
-1. loads enabled workspace reminder settings;
-2. finds active AI systems with review dates inside the configured window;
-3. determines whether the reminder is upcoming, due today or overdue;
-4. skips systems without an owner email;
-5. generates a dedupe key;
-6. checks whether the reminder was already successfully sent;
-7. sends through Resend;
-8. stores the delivery result;
-9. records a successful delivery in the workspace activity trail.
+1. loads enabled workspace reminder settings,
+2. identifies AI systems with a review date inside the reminder horizon,
+3. ignores retired systems,
+4. determines whether each system is upcoming, due today, or overdue,
+5. looks for the AI-system `owner_email`,
+6. suppresses previously successful identical reminders,
+7. calls the transactional-email adapter,
+8. records success/failure in the delivery log,
+9. records successful sends in the workspace activity timeline.
 
-### IMPORTANT — still pending / not configured yet
+### Reminder email content
 
-The production email workflow will **not send emails yet** until the following Vercel environment variables are created:
+The email includes:
+
+- Aegistra branding,
+- AI-system name,
+- workspace name,
+- review due date,
+- whether the review is upcoming/due/overdue,
+- direct link back to the AI-system record.
+
+### Duplicate protection
+
+Duplicate protection exists at two layers:
+
+1. Aegistra's `review_reminder_deliveries` database log.
+2. Resend idempotency keys.
+
+### Safety limits
+
+The worker currently caps delivery attempts per run to avoid unexpectedly large batches.
+
+---
+
+# IMPORTANT: reminder email activation is still pending
+
+The **application code exists**, but reminder emails are **not currently active in production**.
+
+This distinction is important for any developer/agent taking over the project.
+
+## What is still missing
+
+### 1. Resend account/domain configuration
+
+A sending domain/address still needs to be configured in Resend.
+
+Example:
 
 ```text
-CRON_SECRET=
-RESEND_API_KEY=
-REMINDER_FROM_EMAIL=
-REMINDER_REPLY_TO=
+reminders@yourdomain.com
 ```
 
-`REMINDER_REPLY_TO` is optional.
+The sender/domain must be verified according to Resend's requirements.
 
-At the moment, requesting the production cron route returns:
+### 2. Resend API key
+
+A production Resend API key has not yet been placed into Vercel.
+
+Required variable:
+
+```text
+RESEND_API_KEY
+```
+
+### 3. Sender email
+
+Required variable:
+
+```text
+REMINDER_FROM_EMAIL
+```
+
+Example:
+
+```text
+Aegistra <reminders@yourdomain.com>
+```
+
+### 4. Optional reply-to
+
+Optional variable:
+
+```text
+REMINDER_REPLY_TO
+```
+
+### 5. Vercel CRON_SECRET
+
+A random production secret still needs to be configured in the Aegistra Vercel project.
+
+Required variable:
+
+```text
+CRON_SECRET
+```
+
+The cron endpoint validates:
+
+```text
+Authorization: Bearer <CRON_SECRET>
+```
+
+Without this variable the endpoint deliberately refuses to run.
+
+At the last live check:
+
+```text
+/api/cron/review-reminders
+```
+
+returned:
 
 ```text
 CRON_SECRET is not configured.
 ```
 
-This is expected and intentional.
+This is the expected current state.
 
-### What still needs to be done for reminders
+### 6. Redeploy after adding environment variables
 
-Whoever continues this project should:
+After configuring the email/cron variables in Vercel, redeploy Aegistra so the production functions receive them.
 
-1. Create/connect a Resend account.
-2. Add and verify the sending domain in Resend.
-3. Create a Resend API key.
-4. Decide the production sender, for example:
+### 7. End-to-end reminder test
 
-   ```text
-   Aegistra <reminders@yourdomain.com>
-   ```
+Before enabling reminders for customers, perform a controlled test:
 
-5. Generate a strong random `CRON_SECRET`.
-6. Add these environment variables to the **Aegistra Vercel project only**:
+1. configure Resend,
+2. configure all Vercel variables,
+3. create/test an AI system with an owner email and a review date inside the reminder window,
+4. enable reminders in Workspace Settings,
+5. invoke the secured cron endpoint,
+6. verify the email delivered,
+7. verify a delivery row was created,
+8. verify an activity event was created,
+9. invoke again and confirm the successful reminder is not duplicated.
 
-   ```text
-   RESEND_API_KEY=re_xxx
-   REMINDER_FROM_EMAIL=Aegistra <reminders@yourdomain.com>
-   REMINDER_REPLY_TO=governance@yourdomain.com
-   CRON_SECRET=<strong-random-secret>
-   ```
-
-7. Redeploy after adding the environment variables.
-8. Verify that the Vercel Cron job appears for the project.
-9. Enable reminders for a test workspace.
-10. Set a test AI system with:
-    - an owner email;
-    - a review date inside the reminder window.
-11. Run/test the reminder endpoint with proper authorization.
-12. Confirm:
-    - email is delivered;
-    - delivery row is written;
-    - activity event appears;
-    - rerunning the same reminder does not duplicate the email.
-
-**Do not commit any of these secrets into GitHub.**
+**No reminder email should be considered production-ready until this test passes.**
 
 ---
 
-# Sprint 3 — Monetization
+# Database migrations
 
-**Status: not started.**
-
-Planned work:
-
-## 1. Billing and plan enforcement
-
-Expected next implementation:
-
-- subscription billing provider;
-- Free / Team / Business plans;
-- checkout;
-- billing portal;
-- subscription-state syncing;
-- server-side plan enforcement;
-- upgrade/downgrade behavior;
-- billing status in Settings;
-- paid-feature gating.
-
-Current plan limits already exist conceptually in the application, for example:
+All SQL migrations live under:
 
 ```text
-Free → 3 systems
-Team → 50 systems
-Business → high/unlimited system limit
+supabase/migrations/
 ```
 
-However, **no real payment processor is wired yet**.
+Apply every migration in numeric order for a new environment.
+
+## Migration history
+
+### `001_init.sql`
+
+Initial product schema and RLS.
+
+Created core tables including:
+
+- profiles,
+- workspaces,
+- workspace_members,
+- ai_systems,
+- action_items,
+- evidence_items.
+
+Also created foundational RLS helper functions and policies.
+
+### `002_performance_indexes.sql`
+
+Added indexes for initial foreign keys/common access patterns.
+
+### `003_system_review_history.sql`
+
+Added:
+
+- `system_reviews`,
+- review-history RLS,
+- review indexes.
+
+### `004_system_reviews_reviewer_index.sql`
+
+Added reviewer lookup/index coverage.
+
+### `005_private_evidence_storage_and_activity.sql`
+
+Added:
+
+- file metadata to evidence,
+- `activity_events`,
+- private `evidence` Storage bucket,
+- workspace-scoped Storage policies.
+
+### `006_automatic_activity_triggers.sql`
+
+Added database triggers for automatic activity logging across:
+
+- AI systems,
+- reviews,
+- actions,
+- evidence.
+
+### `007_workspace_invitations_and_roles.sql`
+
+Added:
+
+- owner/write helper functions,
+- `workspace_invitations`,
+- enforced role policies,
+- invitation/member activity triggers.
+
+### `008_secure_invitation_acceptance.sql`
+
+Added secure invitation-acceptance RPC.
+
+### `009_secure_workspace_member_directory.sql`
+
+Added a controlled workspace member-directory function so the app can display teammate information without exposing `auth.users` directly.
+
+### `010_harden_invitation_mutations.sql`
+
+Hardened invitation creation/revocation so normal clients cannot mutate invitation roles after creation.
+
+### `011_review_reminder_settings_and_delivery_log.sql`
+
+Added:
+
+- `workspace_reminder_settings`,
+- `review_reminder_deliveries`,
+- reminder-setting policies,
+- reminder-setting activity logging.
+
+### `012_reminder_and_invitation_fk_indexes.sql`
+
+Added covering indexes for reminder/invitation foreign keys identified by Supabase's performance advisor.
 
 ---
 
-## 2. Assurance-pack export
+# Current database objects
 
-Planned:
-
-- generated customer-assurance package;
-- PDF and/or ZIP export;
-- selected governance records;
-- system inventory;
-- ownership;
-- reviews;
-- evidence references;
-- open/closed actions;
-- timestamps.
-
-This feature should build on the evidence and audit work completed in Sprint 2.
-
----
-
-## 3. Questionnaire answer library
-
-Planned:
-
-- reusable AI/security questionnaire answers;
-- workspace answer library;
-- approved wording;
-- evidence links;
-- owner;
-- review/expiry dates;
-- copy/export workflow.
-
----
-
-## 4. Framework references and mapping
-
-Planned:
-
-- EU AI Act transparency references;
-- NIST AI RMF mapping;
-- ISO/IEC 42001 references;
-- potentially customer-defined control frameworks.
-
-Aegistra should continue avoiding claims that it automatically determines legal compliance.
-
----
-
-# Sprint 4 — Expansion
-
-**Status: not started.**
-
-Potential expansion areas:
-
-- Google Workspace AI/tool discovery experiments;
-- Microsoft 365 discovery experiments;
-- Slack workflow;
-- Microsoft Teams workflow;
-- employee AI-tool approval/intake form;
-- approved-AI catalog;
-- consultant/MSP multi-client mode;
-- multi-workspace switching;
-- SSO;
-- enterprise audit/reporting capabilities.
-
----
-
-# Application route map
-
-## Public routes
-
-```text
-/
- /login
- /signup
- /privacy
- /terms
- /invite/[token]
- /auth/callback
-```
-
-## Authenticated customer app
-
-```text
-/app
-/app/systems
-/app/systems/new
-/app/systems/[id]
-/app/actions
-/app/evidence
-/app/activity
-/app/settings
-```
-
-## Internal platform admin
-
-```text
-/admin
-```
-
-## API / infrastructure routes
-
-```text
-/api/systems/template
-/api/systems/export
-/api/cron/review-reminders
-```
-
----
-
-# Database model
-
-Primary customer tables currently include:
+Primary customer-facing tables now include:
 
 ```text
 profiles
@@ -1013,99 +1108,101 @@ workspace_reminder_settings
 review_reminder_deliveries
 ```
 
-Supabase Storage bucket:
+Private file bucket:
 
 ```text
 evidence
 ```
 
-The private Postgres schema also contains authorization, invitation and audit helper functions.
-
 ---
 
-# Supabase migrations
+# Security model
 
-All SQL files inside:
+## Tenant isolation
+
+Aegistra relies on Postgres Row Level Security.
+
+Tenant isolation is enforced using workspace membership at the database layer.
+
+The frontend is not the security boundary.
+
+## Private helper schema
+
+Authorization/helper functions live inside:
 
 ```text
-supabase/migrations/
+private
 ```
 
-must be applied in **numeric order** for a fresh environment.
+rather than being exposed as ordinary public tables/functions.
 
-Current migration history covers:
+## Secret-key handling
 
-1. initial schema and RLS;
-2. performance indexes;
-3. system review history;
-4. review-author index;
-5. private evidence storage + activity log;
-6. automatic activity triggers;
-7. workspace invitations + role enforcement;
-8. secure invitation acceptance;
-9. secure workspace-member directory;
-10. invitation mutation hardening;
-11. review reminder settings + delivery log;
-12. reminder/invitation foreign-key indexes.
-
-Do not assume only the first migration is sufficient.
-
----
-
-# Security architecture
-
-Current security controls include:
-
-- Supabase Postgres Row Level Security;
-- workspace-scoped data access;
-- read-only Viewer role enforced in RLS;
-- private authorization helpers;
-- server-only Supabase secret key;
-- private evidence Storage bucket;
-- workspace-scoped Storage policies;
-- one-hour evidence signed URLs;
-- email-matched invitation acceptance;
-- expiring invitation tokens;
-- hashed invitation tokens in the database;
-- owner/admin/member/viewer role hierarchy;
-- append-only review records;
-- Postgres-triggered activity events;
-- server-side CSV validation;
-- CSV size and row caps;
-- server-side plan-limit checks;
-- protected cron endpoint;
-- provider idempotency support for reminder emails;
-- no production AI prompts/model traffic collected by the MVP.
-
-Supabase security-advisor checks were run repeatedly during implementation and showed:
+The following must remain server-only:
 
 ```text
-0 security findings
+SUPABASE_SECRET_KEY
+RESEND_API_KEY
+CRON_SECRET
 ```
 
-The current remaining Supabase performance notices are primarily unused-index informational notices because the production database contains little/no usage data yet.
+Never prefix any of these with `NEXT_PUBLIC_`.
+
+## Private evidence
+
+Evidence storage:
+
+- uses a private bucket,
+- applies workspace-scoped Storage RLS,
+- uses expiring signed URLs.
+
+## Audit trail
+
+Core activity is logged by database triggers rather than relying entirely on frontend code.
+
+## CSV safety
+
+CSV imports are:
+
+- server validated,
+- workspace scoped,
+- size limited,
+- row limited,
+- plan limited,
+- enum/date/email validated.
+
+## Reminder safety
+
+Review reminders use:
+
+- `CRON_SECRET` authorization,
+- server-only email credentials,
+- Aegistra database de-duplication,
+- provider idempotency keys,
+- delivery-attempt logging,
+- a per-run attempt cap.
 
 ---
 
-# Security work still recommended before serious paid enterprise launch
+# Security work still recommended before serious paid enterprise sales
 
-The current implementation is suitable for continued MVP/design-partner development, but before selling into regulated/large-enterprise environments, consider:
+Even though the current Supabase security advisor is clean, additional production-hardening work is still recommended before selling into security-sensitive enterprise environments.
 
-- hardened Content Security Policy;
-- broader security-response headers review;
-- admin MFA;
-- stronger password/rate-limit policy review;
-- formal backup/restore testing;
-- dependency/SAST scanning;
-- secret rotation procedures;
-- formal DPA;
-- subprocessor list;
-- finalized privacy policy;
-- finalized Terms of Service;
-- retention/deletion policy;
-- external penetration/security review;
-- incident-response process;
-- SSO/SAML/OIDC if enterprise customers require it.
+Items include:
+
+- stronger Content Security Policy,
+- stronger authentication/password policy,
+- rate-limit review,
+- admin MFA,
+- backup/restore testing,
+- dependency/SAST scanning,
+- formal DPA,
+- finalized privacy/terms,
+- subprocessors page,
+- retention/deletion policy,
+- security incident process,
+- external penetration/security review,
+- formal audit-log retention policy.
 
 ---
 
@@ -1125,38 +1222,43 @@ to:
 
 for local development.
 
-Current variables:
+## Core variables
 
-```text
+```bash
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
 
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-
-SUPABASE_SECRET_KEY=
-
+SUPABASE_SECRET_KEY=sb_secret_xxx
 ADMIN_EMAILS=you@example.com
-
-# Pending production reminder setup
-RESEND_API_KEY=
-REMINDER_FROM_EMAIL=Aegistra <reminders@yourdomain.com>
-REMINDER_REPLY_TO=
-CRON_SECRET=
 ```
 
-Rules:
+## Reminder variables
 
-- never expose `SUPABASE_SECRET_KEY` through a `NEXT_PUBLIC_` variable;
-- never expose `RESEND_API_KEY`;
-- never commit `CRON_SECRET`;
-- production values belong in Vercel Environment Variables.
+These exist in the codebase but are currently **pending production configuration**:
+
+```bash
+RESEND_API_KEY=re_xxx
+REMINDER_FROM_EMAIL=Aegistra <reminders@yourdomain.com>
+REMINDER_REPLY_TO=governance@yourdomain.com
+CRON_SECRET=use-a-random-secret-at-least-16-characters
+```
+
+`REMINDER_REPLY_TO` is optional.
 
 ---
 
 # Local development
 
+Install dependencies:
+
 ```bash
 npm install
+```
+
+Start development server:
+
+```bash
 npm run dev
 ```
 
@@ -1174,201 +1276,372 @@ npm run build
 
 ---
 
-# Supabase Auth configuration
+# Supabase setup for a fresh environment
 
-For local development, add:
+1. Create a new Supabase project.
+2. Apply every file from `supabase/migrations/` in numeric order.
+3. Add the project URL and publishable key to the app environment.
+4. Keep the Supabase secret/service-role key server-only.
+5. Configure Supabase Auth redirect URLs.
+
+Local callback:
 
 ```text
 http://localhost:3000/auth/callback
 ```
 
-to Supabase Auth redirect URLs.
-
-For production:
+Production callback:
 
 ```text
-https://aegistra.vercel.app/auth/callback
+https://YOUR_DOMAIN/auth/callback
 ```
 
-and set the production Site URL appropriately.
-
-Invite signup/email-confirmation flows rely on the callback being configured correctly.
+Set the Supabase Site URL to the final production domain.
 
 ---
 
 # Vercel deployment
 
-The project is already connected to GitHub/Vercel.
-
-Production application:
-
-```text
-https://aegistra.vercel.app/
-```
-
-Deployments occur from:
+1. Import the GitHub repository.
+2. Use the Next.js framework preset.
+3. Configure core environment variables.
+4. Set:
 
 ```text
-dhalishiva/aegistra
-branch: main
+NEXT_PUBLIC_SITE_URL=https://YOUR_DOMAIN
 ```
 
-Vercel Analytics is already mounted.
+5. Deploy.
+6. Configure the final Supabase callback URL.
+7. Verify signup/login/onboarding.
+8. Verify RLS using two separate users/workspaces.
+9. Verify Vercel Analytics.
+10. Configure reminder variables only when ready to activate email delivery.
 
-The reminder cron is already declared in:
+The daily reminder cron is declared in:
 
 ```text
 vercel.json
 ```
 
-but email delivery will remain inactive until the Resend/cron environment variables described above are added.
-
----
-
-# GitHub Actions / build verification
-
-A GitHub Actions production build workflow exists under:
+and points to:
 
 ```text
-.github/workflows/build.yml
+/api/cron/review-reminders
 ```
 
-It has been used to diagnose Next.js/TypeScript production-build errors in addition to Vercel builds.
-
-The latest implemented feature sets were brought to successful production builds before continuing development.
-
 ---
 
-# Important architectural decisions
-
-## 1. Governance metadata, not runtime interception
-
-Aegistra does not sit inside the LLM request path.
-
-This lowers:
-
-- integration complexity;
-- security exposure;
-- implementation time;
-- customer concerns around prompt capture.
-
----
-
-## 2. Database-enforced tenancy
-
-Workspace isolation is enforced by Postgres RLS.
-
-Frontend filters are not treated as an authorization boundary.
-
----
-
-## 3. Priority score is not regulatory classification
-
-The governance-priority score only helps teams decide what to review first.
-
-It must not be represented as a legal EU AI Act classification or compliance verdict.
-
----
-
-## 4. Evidence is private by default
-
-Evidence uploads are stored in a private bucket and accessed through expiring signed URLs.
-
----
-
-## 5. Audit events are generated in the database
-
-Important activity is recorded using triggers where practical, reducing dependence on every frontend/client path remembering to log an event.
-
----
-
-## 6. Billing was deliberately deferred
-
-Billing was not added during the MVP/retention work so willingness-to-pay can be validated before increasing product complexity.
-
----
-
-# Current known pending items / Claude handoff
-
-If another developer or Claude continues from this repository, these are the most important current facts.
-
-## Pending immediately
-
-### 1. Resend + Cron production activation
-
-**Code is implemented. Configuration is not.**
-
-Still needed:
+# Repository structure
 
 ```text
+aegistra/
+├── .github/
+│   └── workflows/
+│       └── build.yml
+├── public/
+│   ├── aegistra-mark.svg
+│   ├── favicon.ico
+│   ├── favicon-16x16.png
+│   ├── favicon-32x32.png
+│   ├── favicon-48x48.png
+│   └── apple-touch-icon.png
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── DECISIONS.md
+│   ├── GTM.md
+│   ├── MARKET_ANALYSIS.md
+│   ├── PRD.md
+│   ├── SECURITY.md
+│   └── SPRINTS.md
+├── supabase/
+│   └── migrations/
+│       ├── 001_init.sql
+│       ├── 002_performance_indexes.sql
+│       ├── 003_system_review_history.sql
+│       ├── 004_system_reviews_reviewer_index.sql
+│       ├── 005_private_evidence_storage_and_activity.sql
+│       ├── 006_automatic_activity_triggers.sql
+│       ├── 007_workspace_invitations_and_roles.sql
+│       ├── 008_secure_invitation_acceptance.sql
+│       ├── 009_secure_workspace_member_directory.sql
+│       ├── 010_harden_invitation_mutations.sql
+│       ├── 011_review_reminder_settings_and_delivery_log.sql
+│       └── 012_reminder_and_invitation_fk_indexes.sql
+├── src/
+│   ├── app/
+│   │   ├── admin/
+│   │   ├── api/
+│   │   ├── app/
+│   │   ├── auth/
+│   │   ├── invite/
+│   │   ├── login/
+│   │   ├── onboarding/
+│   │   ├── privacy/
+│   │   ├── signup/
+│   │   └── terms/
+│   ├── components/
+│   └── lib/
+├── .env.example
+├── next.config.ts
+├── package.json
+├── vercel.json
+└── README.md
+```
+
+---
+
+# Production behavior worth knowing
+
+## Plan limits
+
+The current application enforces approximate system-count limits:
+
+```text
+Free: 3
+Team: 50
+Business: effectively unlimited in MVP
+Enterprise: effectively unlimited in MVP
+```
+
+This is **not yet connected to payment/billing state**.
+
+## Workspace model
+
+The current UX effectively assumes one workspace per account.
+
+Invitation acceptance deliberately blocks joining a different workspace if the account already belongs to another workspace.
+
+Proper multi-workspace switching is future work.
+
+## Evidence
+
+Evidence is private and workspace scoped.
+
+There is not yet:
+
+- evidence versioning,
+- document OCR/extraction,
+- automatic evidence classification.
+
+## Audit events
+
+The activity page shows the latest events.
+
+Formal long-term audit retention/export is not implemented yet.
+
+## Email reminders
+
+Reminder code is present but **email delivery is inactive until Resend + Vercel secrets are configured**.
+
+---
+
+# Sprint 3 — Monetization
+
+**Status: not started**
+
+Planned work:
+
+## Billing and plan enforcement
+
+Potential scope:
+
+- billing provider integration,
+- checkout,
+- subscription lifecycle,
+- webhook handling,
+- actual plan upgrades/downgrades,
+- hard feature/usage enforcement,
+- billing/settings UI,
+- cancellation/reactivation flows.
+
+The current plan field and Free/Team/Business concepts already exist, but there is no payment provider connected yet.
+
+## Assurance-pack export
+
+Planned goal:
+
+Generate a customer/auditor-friendly package containing selected governance information, for example:
+
+- AI-system register,
+- ownership,
+- review status,
+- governance-priority information,
+- evidence list,
+- review history,
+- open/closed actions.
+
+Potential output:
+
+- PDF
+- ZIP bundle
+- CSV attachments
+
+## Questionnaire answer library
+
+Planned capability:
+
+Maintain reusable answers to common AI/security questionnaires.
+
+## Framework references/control mapping
+
+Potential future mappings/reference views:
+
+- EU AI Act transparency-related obligations,
+- NIST AI RMF,
+- ISO/IEC 42001,
+- internal governance controls.
+
+This should be implemented as reference/mapping support rather than claiming certification.
+
+---
+
+# Sprint 4 — Expansion
+
+**Status: not started**
+
+Ideas currently planned:
+
+- Google Workspace discovery experiments,
+- Microsoft 365 discovery experiments,
+- approved-AI catalog,
+- employee AI-tool approval/intake workflow,
+- Slack integration,
+- Microsoft Teams integration,
+- consultant/MSP multi-client mode,
+- multi-workspace switching.
+
+---
+
+# Explicit non-goals / not implemented
+
+A developer taking over the project should not assume any of these already exist:
+
+- Stripe/Razorpay/payment billing
+- production subscription lifecycle
+- SSO/SAML
+- SCIM
+- Google Workspace AI discovery
+- Microsoft 365 AI discovery
+- Slack/Teams workflows
+- automatic legal AI-risk classification
+- prompt/model traffic proxying
+- runtime LLM observability
+- framework certification
+- customer-facing assurance-pack export
+- questionnaire-answer library
+- automatic evidence parsing
+- production Resend credentials
+- active reminder email delivery
+
+---
+
+# Claude / developer handoff checklist
+
+If another developer or coding agent continues from here, check these items first.
+
+## 1. Confirm production baseline
+
+Verify:
+
+```text
+https://aegistra.vercel.app/
+```
+
+Then run:
+
+```bash
+npm install
+npm run build
+```
+
+before starting significant work.
+
+## 2. Do not recreate completed Sprint 1/Sprint 2 features
+
+The following already exist and should be extended rather than reimplemented:
+
+- tenant model,
+- RLS,
+- system register,
+- scoring,
+- review history,
+- evidence storage,
+- activity log,
+- roles,
+- invitations,
+- CSV import/export,
+- reminder engine.
+
+## 3. Reminder system is coded but not activated
+
+Before debugging reminder delivery, first check whether these Vercel variables exist:
+
+```text
+CRON_SECRET
 RESEND_API_KEY
 REMINDER_FROM_EMAIL
-optional REMINDER_REPLY_TO
-CRON_SECRET
-verified Resend sending domain
+REMINDER_REPLY_TO
 ```
 
-Test the complete reminder workflow after configuration.
+At present they have **not been configured**.
 
----
-
-### 2. Billing
-
-No payment processor has been integrated yet.
-
-Implement during Sprint 3.
-
----
-
-### 3. Assurance-pack export
-
-Not implemented yet.
-
-This is one of the strongest next product features because the underlying inventory, evidence, review and audit data now exist.
-
----
-
-### 4. Legal documents
-
-Current Privacy and Terms pages are MVP placeholders.
-
-They require proper legal/business review before paid launch.
-
----
-
-### 5. Customer validation
-
-Continue interviewing actual target customers.
-
-Before spending heavily on enterprise features, validate:
-
-- willingness to pay;
-- which questionnaire/evidence workflows create the most pain;
-- whether customers value inventory, reminders, evidence packs, or framework mapping most;
-- whether $49/$149 self-serve pricing is appropriate.
-
----
-
-# Recommended next development order
-
-Suggested continuation:
+A 503 response saying:
 
 ```text
-1. Configure and test Resend + CRON_SECRET
-2. Run an end-to-end production QA pass
-3. Build assurance-pack export
-4. Add real billing/subscriptions
-5. Add questionnaire answer library
-6. Add framework/control mapping
-7. Improve legal/compliance documentation
-8. Add SSO / discovery integrations only when customer demand justifies them
+CRON_SECRET is not configured.
 ```
+
+is therefore expected and is not an application bug.
+
+## 4. Configure Resend before testing reminder emails
+
+Required steps:
+
+- create/connect Resend account,
+- verify sending domain,
+- create API key,
+- configure sender address,
+- add Vercel environment variables,
+- redeploy,
+- enable reminders in a test workspace,
+- test against a system with both `owner_email` and `review_due`.
+
+## 5. Preserve RLS as the authorization boundary
+
+Do not solve authorization by only hiding buttons.
+
+Any new customer-owned object should:
+
+- include `workspace_id`,
+- enable RLS,
+- use workspace helper functions/policies,
+- avoid exposing service-role credentials to the browser.
+
+## 6. Preserve the product guardrail
+
+Do not market the priority score as:
+
+- legal classification,
+- regulatory certification,
+- automatic EU AI Act classification.
+
+It is an internal governance-prioritization score.
+
+## 7. Recommended next development target
+
+After activating/testing reminder delivery, move to Sprint 3:
+
+1. billing/subscriptions,
+2. assurance-pack export,
+3. questionnaire library,
+4. framework/reference mapping.
 
 ---
 
 # Product documentation
 
-More focused documents are available in:
+Additional documentation exists under `docs/`:
 
 - [PRD](docs/PRD.md)
 - [Market analysis](docs/MARKET_ANALYSIS.md)
@@ -1378,7 +1651,7 @@ More focused documents are available in:
 - [Sprint plan](docs/SPRINTS.md)
 - [Architecture decisions](docs/DECISIONS.md)
 
-The README should be treated as the **primary project handoff / current-state document**, while the files above provide deeper topic-specific context.
+The README is intentionally more detailed than those individual documents so a new developer or coding agent can understand the current product state from one file.
 
 ---
 
