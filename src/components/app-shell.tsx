@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
-import { LayoutDashboard, Bot, ListChecks, FolderArchive, Settings, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, Bot, ListChecks, FolderArchive, History, Settings, ShieldCheck } from "lucide-react";
 import { Logo } from "./logo";
 
 const links = [
@@ -8,6 +8,7 @@ const links = [
   ["AI systems", "/app/systems", Bot],
   ["Actions", "/app/actions", ListChecks],
   ["Evidence", "/app/evidence", FolderArchive],
+  ["Activity", "/app/activity", History],
   ["Settings", "/app/settings", Settings],
 ] as const;
 
