@@ -100,7 +100,9 @@ export function parseCsv(input: string): { headers: string[]; rows: CsvRow[] } {
 }
 
 export function csvEscape(value: unknown) {
-  const stringValue = value == null ? "" : String(value);
+  let stringValue = value == null ? "" : String(value);
+  // Spreadsheet formula injection: a text cell starting with = + - @ can run as a formula in Excel or Sheets.
+  if (typeof value === "string" && /^[=+\-@\t\r]/.test(stringValue)) stringValue = `'${stringValue}`;
   if (!/[",\n\r]/.test(stringValue)) return stringValue;
   return `"${stringValue.replace(/"/g, '""')}"`;
 }

@@ -3,6 +3,8 @@ import {
   AlertTriangle,
   Bot,
   CalendarClock,
+  Check,
+  Circle,
   ListChecks,
   Plus,
 } from "lucide-react";
@@ -37,6 +39,30 @@ export default async function Dashboard() {
     (item) => item.review_due && item.review_due <= today
   ).length;
 
+  const missingOwner = systems.filter((item) => !item.owner_name).length;
+  const missingReview = systems.filter((item) => !item.review_due).length;
+  const checklist = [
+    {
+      done: systems.length > 0,
+      label: "Add your first AI system",
+      hint: "Name it, say what it is for, and answer six questions.",
+      href: "/app/systems/new",
+    },
+    {
+      done: systems.length > 0 && missingOwner === 0,
+      label: "Give every system an owner",
+      hint: missingOwner ? `${missingOwner} without an owner.` : "Each system needs one named person.",
+      href: "/app/systems",
+    },
+    {
+      done: systems.length > 0 && missingReview === 0,
+      label: "Set a review date on every system",
+      hint: missingReview ? `${missingReview} without a review date.` : "Pick when each one is checked next.",
+      href: "/app/systems",
+    },
+  ];
+  const checklistDone = checklist.every((item) => item.done);
+
   const stats = [
     [Bot, "AI systems", systems.length],
     [AlertTriangle, "High priority", high],
@@ -59,6 +85,27 @@ export default async function Dashboard() {
           Add AI system
         </Link>
       </div>
+
+      {!checklistDone && (
+        <section aria-label="Getting started" className="card-stamp mt-8 p-5">
+          <h2 className="font-bold">Get your register ready</h2>
+          <ul className="mt-3 divide-y divide-white/10">
+            {checklist.map((item) => (
+              <li key={item.label}>
+                <Link href={item.href} className="flex items-center gap-3 py-3 transition hover:text-sky-300">
+                  {item.done ? (
+                    <Check size={18} className="shrink-0 text-emerald-300" aria-label="Done" />
+                  ) : (
+                    <Circle size={18} className="shrink-0 text-slate-500" aria-label="To do" />
+                  )}
+                  <span className={item.done ? "text-slate-500 line-through" : "font-medium"}>{item.label}</span>
+                  <span className="ml-auto hidden text-sm text-slate-500 sm:inline">{item.hint}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map(([Icon, label, value], index) => (
