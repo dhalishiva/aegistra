@@ -76,11 +76,9 @@ export async function createWorkspaceInvitation(
     return { ok: false, error: "That email is already a workspace member." };
   }
 
-  const now = new Date().toISOString();
-
   await supabase
     .from("workspace_invitations")
-    .update({ revoked_at: now })
+    .delete()
     .eq("workspace_id", workspace.id)
     .eq("email", email)
     .is("accepted_at", null)
@@ -163,7 +161,7 @@ export async function revokeWorkspaceInvitation(formData: FormData) {
 
   const { error } = await supabase
     .from("workspace_invitations")
-    .update({ revoked_at: new Date().toISOString() })
+    .delete()
     .eq("id", invitationId)
     .eq("workspace_id", workspace.id)
     .is("accepted_at", null)
