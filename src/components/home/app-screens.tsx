@@ -5,7 +5,7 @@ import { sampleActions, sampleSystems } from "./sample-data";
 /** Frame for a recreation of a real app screen. Always labelled as sample data. */
 export function AppWindow({ path, children }: { path: string; children: ReactNode }) {
   return (
-    <figure className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-ink">
+    <figure className="min-w-0 overflow-hidden rounded-xl border-2 border-white bg-ink shadow-stamp">
       <figcaption className="flex items-center justify-between gap-3 border-b border-white/10 bg-panel px-4 py-2.5 text-xs text-slate-400">
         <span className="truncate">{path}</span>
         <span className="badge shrink-0">Sample data</span>
@@ -87,48 +87,6 @@ export function OverviewScreen() {
             </li>
           ))}
         </ul>
-      </div>
-    </AppWindow>
-  );
-}
-
-export function RegisterScreen() {
-  return (
-    <AppWindow path="/app/systems">
-      <div className="text-sm font-semibold text-sky-300">Register</div>
-      <div className="mt-1 text-2xl font-bold">AI systems</div>
-      <p className="mt-1 text-sm text-slate-400">Every AI-enabled system or business use your team relies on.</p>
-
-      <div className="table-wrap mt-5">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>System</th>
-              <th>Owner</th>
-              <th>Lifecycle</th>
-              <th>Priority</th>
-              <th className="whitespace-nowrap">Review due</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sampleSystems.map((system) => (
-              <tr key={system.name}>
-                <td className="min-w-[11rem]">
-                  <div className="font-semibold">{system.name}</div>
-                  <div className="mt-1 text-xs text-slate-500">
-                    {system.provider} · {system.purpose}
-                  </div>
-                </td>
-                <td className="whitespace-nowrap">{system.owner ?? "—"}</td>
-                <td>{system.lifecycle}</td>
-                <td className="whitespace-nowrap">
-                  <PriorityBadge level={system.level} score={system.score} />
-                </td>
-                <td className="whitespace-nowrap">{system.review ?? "Not set"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </AppWindow>
   );

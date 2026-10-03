@@ -2,8 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ------------------------------------------------------------------ */
+/* Theme tokens. Values are space separated RGB so Tailwind can apply  */
+/* opacity. Light is the default; html[data-theme="dark"] switches.    */
+/* ------------------------------------------------------------------ */
 :root {
+  color-scheme: light;
+
+  --fg: 14 24 48; /* ink navy; used by text-white / border-white */
+  --ink: 238 241 248; /* page canvas */
+  --panel: 255 255 255; /* sidebars, raised panels */
+  --card: 255 255 255;
+  --on-accent: 255 255 255;
+
+  --slate-50: 248 250 252;
+  --slate-100: 241 245 249;
+  --slate-200: 30 41 59;
+  --slate-300: 51 65 85;
+  --slate-400: 71 85 105;
+  --slate-500: 100 116 139;
+  --slate-600: 148 163 184;
+  --slate-950: 255 255 255;
+
+  --sky-50: 27 52 176;
+  --sky-100: 27 52 176;
+  --sky-200: 27 52 176;
+  --sky-300: 37 66 220; /* accent as text */
+  --sky-400: 43 78 255; /* accent as fill */
+
+  --emerald-200: 6 95 70;
+  --emerald-300: 4 120 87;
+  --emerald-400: 16 185 129;
+  --amber-100: 120 53 15;
+  --amber-200: 146 64 14;
+  --amber-300: 180 83 9;
+  --amber-400: 245 158 11;
+  --red-200: 153 27 27;
+  --red-300: 185 28 28;
+  --red-400: 239 68 68;
+  --indigo-300: 99 102 241;
+
+  --signal-high: 205 50 28;
+  --signal-medium: 161 92 0;
+  --signal-low: 11 127 91;
+}
+
+html[data-theme="dark"] {
   color-scheme: dark;
+
+  --fg: 255 255 255;
+  --ink: 10 16 22;
+  --panel: 16 25 34;
+  --card: 22 32 43;
+  --on-accent: 2 6 23;
+
+  --slate-50: 248 250 252;
+  --slate-100: 241 245 249;
+  --slate-200: 226 232 240;
+  --slate-300: 203 213 225;
+  --slate-400: 148 163 184;
+  --slate-500: 100 116 139;
+  --slate-600: 71 85 105;
+  --slate-950: 2 6 23;
+
+  --sky-50: 240 249 255;
+  --sky-100: 224 242 254;
+  --sky-200: 186 230 253;
+  --sky-300: 125 211 252;
+  --sky-400: 56 189 248;
+
+  --emerald-200: 167 243 208;
+  --emerald-300: 110 231 183;
+  --emerald-400: 52 211 153;
+  --amber-100: 254 243 199;
+  --amber-200: 253 230 138;
+  --amber-300: 252 211 77;
+  --amber-400: 251 191 36;
+  --red-200: 254 202 202;
+  --red-300: 252 165 165;
+  --red-400: 248 113 113;
+
+  --signal-high: 255 123 92;
+  --signal-medium: 242 184 75;
+  --signal-low: 76 211 160;
 }
 
 * {
@@ -17,8 +98,8 @@ html {
 
 body {
   margin: 0;
-  background: #0a1016;
-  color: #e7edf3;
+  background: rgb(var(--ink));
+  color: rgb(var(--slate-200));
   @apply font-sans antialiased;
 }
 
@@ -46,12 +127,12 @@ select {
 }
 
 :focus-visible {
-  outline: 2px solid #55c4f5;
+  outline: 2px solid rgb(var(--sky-400));
   outline-offset: 2px;
 }
 
 ::selection {
-  background: rgba(85, 196, 245, 0.3);
+  background: rgb(var(--sky-400) / 0.28);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -72,23 +153,29 @@ select {
   }
 
   .card {
-    @apply rounded-xl border border-white/10 bg-white/[0.035];
+    @apply rounded-xl border border-white/[0.14] bg-card;
+  }
+
+  /* The one loud surface: ink outline and a hard offset shadow, like a stamped form. */
+  .card-stamp {
+    @apply rounded-xl border-2 border-white bg-card shadow-stamp;
   }
 
   .card-hover {
-    @apply transition duration-200 hover:border-sky-400/30 hover:bg-white/[0.06];
+    @apply transition duration-200 hover:border-sky-400/50;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-sky-400 px-4 py-2.5 font-semibold text-slate-950 transition hover:bg-sky-300;
+    @apply inline-flex items-center justify-center rounded-lg border-2 border-white bg-sky-400 px-4 py-2.5 font-semibold shadow-stamp-sm transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+    color: rgb(var(--on-accent));
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/[0.04] px-4 py-2.5 font-semibold text-white transition hover:bg-white/10;
+    @apply inline-flex items-center justify-center rounded-lg border-2 border-white/80 bg-card px-4 py-2.5 font-semibold text-white transition hover:bg-white/5;
   }
 
   .input {
-    @apply w-full rounded-lg border border-white/10 bg-slate-950/70 px-3.5 py-2.5 text-white outline-none placeholder:text-slate-500 focus:border-sky-400/60;
+    @apply w-full rounded-lg border border-white/25 bg-slate-950 px-3.5 py-2.5 text-white outline-none placeholder:text-slate-500 focus:border-sky-400 focus:ring-2 focus:ring-sky-400/25;
   }
 
   .label {
@@ -101,22 +188,22 @@ select {
   }
 
   .badge {
-    @apply inline-flex items-center rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-semibold;
+    @apply inline-flex items-center rounded-md border border-white/20 bg-white/5 px-2 py-0.5 text-xs font-semibold;
   }
 
   /* Priority levels carry their colour everywhere they appear. */
   .badge-high {
-    @apply border-signal-high/40 bg-signal-high/10 text-signal-high;
+    @apply border-signal-high/60 bg-signal-high/10 text-signal-high;
   }
   .badge-medium {
-    @apply border-signal-medium/40 bg-signal-medium/10 text-signal-medium;
+    @apply border-signal-medium/60 bg-signal-medium/10 text-signal-medium;
   }
   .badge-low {
-    @apply border-signal-low/40 bg-signal-low/10 text-signal-low;
+    @apply border-signal-low/60 bg-signal-low/10 text-signal-low;
   }
 
   .table-wrap {
-    @apply overflow-x-auto rounded-xl border border-white/10;
+    @apply overflow-x-auto rounded-xl border border-white/[0.14] bg-card;
   }
 
   .table {
@@ -124,10 +211,21 @@ select {
   }
 
   .table th {
-    @apply bg-white/[0.035] px-4 py-3 text-left font-semibold text-slate-400;
+    @apply bg-white/[0.045] px-4 py-3 text-left font-semibold text-slate-400;
   }
 
   .table td {
     @apply px-4 py-3 align-middle text-slate-200;
+  }
+
+  /* Faint ledger rules behind the hero. */
+  .ledger-bg {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 47px,
+      rgb(var(--fg) / 0.06) 47px,
+      rgb(var(--fg) / 0.06) 48px
+    );
   }
 }

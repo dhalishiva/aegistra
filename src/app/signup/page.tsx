@@ -7,7 +7,7 @@ export default function Signup() {
     <AuthShell
       kicker="Free plan"
       title="Create your account"
-      lede="The Free plan covers your first 3 AI systems. No credit card."
+      lede="The Free plan covers your first 3 AI systems. We email a 6-digit code to confirm your address."
       footer={
         <>
           Already registered?{" "}

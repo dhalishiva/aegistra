@@ -4,12 +4,9 @@ import { Check, ChevronDown, Minus } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ScoreDemo } from "@/components/home/score-demo";
-import {
-  ActionsScreen,
-  OverviewScreen,
-  ReadinessScreen,
-  RegisterScreen,
-} from "@/components/home/app-screens";
+import { ActionsScreen, OverviewScreen, ReadinessScreen } from "@/components/home/app-screens";
+import { RegisterScreen } from "@/components/home/register-screen";
+import { HeroHeading } from "@/components/motion";
 import {
   AUTONOMY_WEIGHTS,
   DATA_WEIGHTS,
@@ -264,12 +261,8 @@ export default function Home() {
       <SiteHeader />
       <main>
         {/* Hero */}
-        <section className="container-shell pb-16 pt-10 md:pt-16 xl:pb-24 xl:pt-20">
-          <h1 className="max-w-5xl text-[2.5rem] font-extrabold leading-[1.04] tracking-[-0.03em] sm:text-6xl xl:text-[4rem]">
-            <span className="block">Know where AI is used.</span>
-            <span className="block">Know who owns it.</span>
-            <span className="block">Be ready when customers ask.</span>
-          </h1>
+        <section className="ledger-bg border-b border-white/10"><div className="container-shell pb-16 pt-10 md:pt-16 xl:pb-24 xl:pt-20">
+          <HeroHeading lines={["Know where AI is used.", "Know who owns it.", "Be ready when customers ask."]} />
           <div className="mt-10 grid gap-12 xl:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] xl:items-start xl:gap-14">
           <div>
             <p className="max-w-xl text-lg leading-8 text-slate-300">
@@ -293,7 +286,7 @@ export default function Home() {
 
           <ScoreDemo />
           </div>
-        </section>
+        </div></section>
 
         {/* The problem */}
         <Section id="why">

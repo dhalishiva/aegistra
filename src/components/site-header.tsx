@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "./logo";
 import { MobileNav } from "./mobile-nav";
+import { ThemeToggle } from "./theme-toggle";
 
 export const siteLinks = [
   ["Product", "/#product"],
@@ -34,6 +35,7 @@ export function SiteHeader() {
           <Link href="/signup" className="btn-primary px-4 py-2 text-sm">
             Start free
           </Link>
+          <ThemeToggle />
           <MobileNav links={siteLinks} />
         </div>
       </div>

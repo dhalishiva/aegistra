@@ -1,5 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { AnimatedNumber } from "@/components/motion";
+
 import { useState } from "react";
 import {
   HIGH_THRESHOLD,
@@ -191,7 +194,7 @@ export function ScoreDemo() {
   return (
     <section
       aria-label="Try the priority score"
-      className="rounded-2xl border border-white/10 bg-panel shadow-[0_30px_80px_-40px_rgba(0,0,0,0.9)]"
+      className="card-stamp bg-panel"
     >
       <div className="border-b border-white/10 px-5 py-4">
         <h2 className="text-lg font-bold">Add an AI system</h2>
@@ -292,7 +295,7 @@ export function ScoreDemo() {
           </div>
           <div className="mt-1 flex items-end justify-between gap-3">
             <div className="flex items-baseline gap-1.5">
-              <span className={`text-6xl font-extrabold leading-none tabular-nums ${style.text}`}>{score}</span>
+              <AnimatedNumber value={score} className={`text-6xl font-extrabold leading-none tabular-nums ${style.text}`} />
               <span className="text-lg text-slate-500">/100</span>
             </div>
             <span className={`badge ${style.chip} mb-1`}>{style.label}</span>
@@ -304,12 +307,12 @@ export function ScoreDemo() {
           <div className="relative mt-4">
             <div className="flex h-3 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
               {rows.map((row, index) => (
-                <div
+                <motion.div
                   key={index}
-                  className={`${style.bar} h-full flex-none transition-[width] duration-300 motion-reduce:transition-none ${
-                    row.points > 0 ? "border-r-2 border-panel" : ""
-                  }`}
-                  style={{ width: `${row.points}%` }}
+                  className={`${style.bar} h-full flex-none ${row.points > 0 ? "border-r-2 border-panel" : ""}`}
+                  initial={false}
+                  animate={{ width: `${row.points}%` }}
+                  transition={{ type: "spring", stiffness: 220, damping: 28 }}
                 />
               ))}
             </div>

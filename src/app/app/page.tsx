@@ -7,6 +7,7 @@ import {
   Plus,
 } from "lucide-react";
 import { getSessionContext } from "@/lib/workspace";
+import { Reveal } from "@/components/motion";
 
 export default async function Dashboard() {
   const { supabase, workspace } = await getSessionContext();
@@ -60,14 +61,16 @@ export default async function Dashboard() {
       </div>
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map(([Icon, label, value]) => (
-          <div className="card p-5" key={label}>
+        {stats.map(([Icon, label, value], index) => (
+          <Reveal delay={index * 0.06} key={label}>
+          <div className="card p-5">
             <div className="flex justify-between text-sm text-slate-400">
               <span>{label}</span>
               <Icon size={18} className="text-sky-300" />
             </div>
             <div className="mt-3 text-3xl font-bold">{value}</div>
           </div>
+          </Reveal>
         ))}
       </div>
 

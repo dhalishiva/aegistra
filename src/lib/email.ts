@@ -1,10 +1,15 @@
+import nodemailer from "nodemailer";
 import { getSiteUrl } from "./site-url";
 
 export type ReviewReminderKind = "upcoming" | "due_today" | "overdue";
 
+function smtpConfigured() {
+  return Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASSWORD);
+}
+
 export function isReminderEmailConfigured() {
   return Boolean(
-    process.env.RESEND_API_KEY &&
+    (process.env.RESEND_API_KEY || smtpConfigured()) &&
       process.env.REMINDER_FROM_EMAIL &&
       process.env.CRON_SECRET
   );
@@ -55,8 +60,9 @@ export async function sendReviewReminderEmail(input: {
 }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.REMINDER_FROM_EMAIL;
+  const useSmtp = smtpConfigured();
 
-  if (!apiKey || !from) {
+  if ((!apiKey && !useSmtp) || !from) {
     return {
       ok: false as const,
       id: null,
@@ -90,6 +96,34 @@ export async function sendReviewReminderEmail(input: {
       </div>
     </div>
   `;
+
+  if (useSmtp) {
+    // Outlook / Microsoft 365: smtp.office365.com, port 587, STARTTLS.
+    const port = Number(process.env.SMTP_PORT || 587);
+    const transport = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port,
+      secure: port === 465,
+      requireTLS: port !== 465,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD },
+    });
+    try {
+      const info = await transport.sendMail({
+        from,
+        to: input.recipient,
+        subject,
+        html,
+        ...(process.env.REMINDER_REPLY_TO ? { replyTo: process.env.REMINDER_REPLY_TO } : {}),
+      });
+      return { ok: true as const, id: info.messageId ?? null, error: null };
+    } catch (error) {
+      return {
+        ok: false as const,
+        id: null,
+        error: error instanceof Error ? error.message : "SMTP send failed.",
+      };
+    }
+  }
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
