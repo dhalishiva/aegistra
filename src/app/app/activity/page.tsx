@@ -55,7 +55,7 @@ export default async function ActivityPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <div className="kicker">Audit trail</div>
-      <h1 className="mt-2 text-3xl font-black">Workspace activity</h1>
+      <h1 className="mt-2 text-3xl font-bold">Workspace activity</h1>
       <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
         An append-only timeline of important governance changes. Events are
         written automatically by the database when systems, reviews, actions or

@@ -48,7 +48,7 @@ export default async function SystemDetail({
       <div className="mt-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <div className="kicker">AI system</div>
-          <h1 className="mt-2 text-3xl font-black">{system.name}</h1>
+          <h1 className="mt-2 text-3xl font-bold">{system.name}</h1>
           <p className="mt-2 max-w-2xl text-sm text-slate-400">
             {system.purpose}
           </p>

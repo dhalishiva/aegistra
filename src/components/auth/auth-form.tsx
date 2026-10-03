@@ -40,12 +40,22 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     router.refresh();
   }
 
+  const isSignup = mode === "signup";
   return (
-    <form onSubmit={submit} className="mt-7 space-y-4">
-      <div><label className="label">Work email</label><input className="input" type="email" value={email} onChange={e=>setEmail(e.target.value)} required placeholder="you@company.com" /></div>
-      <div><label className="label">Password</label><input className="input" type="password" minLength={6} value={password} onChange={e=>setPassword(e.target.value)} required placeholder="At least 6 characters" /></div>
-      {message && <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-slate-300">{message}</div>}
-      <button disabled={loading} className="btn-primary w-full">{loading ? "Working…" : mode === "signup" ? "Create account" : "Log in"}</button>
+    <form onSubmit={submit} className="mt-7 space-y-4" noValidate={false}>
+      <div>
+        <label htmlFor="email" className="label">Work email</label>
+        <input id="email" name="email" className="input" type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required placeholder="you@company.com" />
+      </div>
+      <div>
+        <label htmlFor="password" className="label">Password</label>
+        <input id="password" name="password" className="input" type="password" autoComplete={isSignup ? "new-password" : "current-password"} minLength={6} value={password} onChange={e=>setPassword(e.target.value)} required placeholder="At least 6 characters" aria-describedby={isSignup ? "password-hint" : undefined} />
+        {isSignup && <p id="password-hint" className="mt-1.5 text-xs text-slate-400">Use at least 6 characters.</p>}
+      </div>
+      <div aria-live="polite">
+        {message && <div role="status" className="rounded-lg border border-white/10 bg-white/5 p-3 text-sm text-slate-200">{message}</div>}
+      </div>
+      <button disabled={loading} className="btn-primary w-full disabled:opacity-60">{loading ? "Working…" : isSignup ? "Create account" : "Log in"}</button>
     </form>
   );
 }

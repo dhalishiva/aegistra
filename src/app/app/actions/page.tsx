@@ -15,7 +15,7 @@ export default async function Actions() {
   return (
     <div className="mx-auto max-w-5xl">
       <div className="kicker">Workflow</div>
-      <h1 className="mt-2 text-3xl font-black">Governance actions</h1>
+      <h1 className="mt-2 text-3xl font-bold">Governance actions</h1>
 
       <div className="mt-7 grid gap-5 lg:grid-cols-[.7fr_1.3fr]">
         <form action={createActionItem} className="card h-fit space-y-4 p-5">

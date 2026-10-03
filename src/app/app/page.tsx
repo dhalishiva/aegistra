@@ -48,7 +48,7 @@ export default async function Dashboard() {
       <div className="flex items-end justify-between gap-4">
         <div>
           <div className="kicker">Overview</div>
-          <h1 className="mt-2 text-3xl font-black">{workspace.name}</h1>
+          <h1 className="mt-2 text-3xl font-bold">{workspace.name}</h1>
           <p className="mt-2 text-sm text-slate-400">
             A living view of your AI systems, reviews and governance work.
           </p>
@@ -66,7 +66,7 @@ export default async function Dashboard() {
               <span>{label}</span>
               <Icon size={18} className="text-sky-300" />
             </div>
-            <div className="mt-3 text-3xl font-black">{value}</div>
+            <div className="mt-3 text-3xl font-bold">{value}</div>
           </div>
         ))}
       </div>

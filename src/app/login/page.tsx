@@ -1,2 +1,23 @@
-import Link from "next/link"; import { AuthForm } from "@/components/auth/auth-form"; import { Logo } from "@/components/logo";
-export default function Login(){return <main className="container-shell grid min-h-screen place-items-center py-12"><div className="w-full max-w-md"><Link href="/"><Logo/></Link><div className="card mt-7 p-6"><div className="kicker">Welcome back</div><h1 className="mt-2 text-3xl font-black">Log in</h1><p className="mt-2 text-sm text-slate-400">Continue to your AI governance workspace.</p><AuthForm mode="login"/><p className="mt-5 text-center text-sm text-slate-500">New to Aegistra? <Link href="/signup" className="text-sky-300">Create an account</Link></p></div></div></main>}
+import Link from "next/link";
+import { AuthForm } from "@/components/auth/auth-form";
+import { AuthShell } from "@/components/auth/auth-shell";
+
+export default function Login() {
+  return (
+    <AuthShell
+      kicker="Welcome back"
+      title="Log in"
+      lede="Continue to your AI governance workspace."
+      footer={
+        <>
+          New to Aegistra?{" "}
+          <Link href="/signup" className="text-sky-300 underline underline-offset-4">
+            Create an account
+          </Link>
+        </>
+      }
+    >
+      <AuthForm mode="login" />
+    </AuthShell>
+  );
+}

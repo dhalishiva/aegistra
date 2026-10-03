@@ -1,2 +1,25 @@
-import { createWorkspace } from "@/lib/actions"; import { Logo } from "@/components/logo";
-export default function Onboarding(){return <main className="container-shell grid min-h-screen place-items-center py-12"><div className="w-full max-w-lg"><Logo/><form action={createWorkspace} className="card mt-7 space-y-4 p-6"><div className="kicker">Workspace setup</div><h1 className="text-3xl font-black">Create your governance workspace</h1><p className="text-sm text-slate-400">Use your company or team name. You will become the workspace owner.</p><div><label className="label">Your name</label><input name="full_name" className="input" placeholder="Your name"/></div><div><label className="label">Workspace name</label><input name="name" className="input" required placeholder="Acme Labs"/></div><button className="btn-primary w-full">Create workspace</button></form></div></main>}
+import { createWorkspace } from "@/lib/actions";
+import { AuthShell } from "@/components/auth/auth-shell";
+
+export default function Onboarding() {
+  return (
+    <AuthShell
+      kicker="Workspace setup"
+      title="Create your workspace"
+      lede="Use your company or team name. You become the workspace owner and can invite teammates later."
+      width="max-w-lg"
+    >
+      <form action={createWorkspace} className="mt-7 space-y-4">
+        <div>
+          <label htmlFor="full_name" className="label">Your name</label>
+          <input id="full_name" name="full_name" autoComplete="name" className="input" placeholder="Priya Nair" />
+        </div>
+        <div>
+          <label htmlFor="name" className="label">Workspace name</label>
+          <input id="name" name="name" required autoComplete="organization" className="input" placeholder="Acme Labs" />
+        </div>
+        <button className="btn-primary w-full">Create workspace</button>
+      </form>
+    </AuthShell>
+  );
+}

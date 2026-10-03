@@ -1,2 +1,23 @@
-import Link from "next/link"; import { AuthForm } from "@/components/auth/auth-form"; import { Logo } from "@/components/logo";
-export default function Signup(){return <main className="container-shell grid min-h-screen place-items-center py-12"><div className="w-full max-w-md"><Link href="/"><Logo/></Link><div className="card mt-7 p-6"><div className="kicker">Start free</div><h1 className="mt-2 text-3xl font-black">Create your account</h1><p className="mt-2 text-sm text-slate-400">Start with up to three registered AI systems.</p><AuthForm mode="signup"/><p className="mt-5 text-center text-sm text-slate-500">Already registered? <Link href="/login" className="text-sky-300">Log in</Link></p></div></div></main>}
+import Link from "next/link";
+import { AuthForm } from "@/components/auth/auth-form";
+import { AuthShell } from "@/components/auth/auth-shell";
+
+export default function Signup() {
+  return (
+    <AuthShell
+      kicker="Free plan"
+      title="Create your account"
+      lede="The Free plan covers your first 3 AI systems. No credit card."
+      footer={
+        <>
+          Already registered?{" "}
+          <Link href="/login" className="text-sky-300 underline underline-offset-4">
+            Log in
+          </Link>
+        </>
+      }
+    >
+      <AuthForm mode="signup" />
+    </AuthShell>
+  );
+}

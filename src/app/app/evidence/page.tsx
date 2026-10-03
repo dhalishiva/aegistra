@@ -53,7 +53,7 @@ export default async function Evidence() {
   return (
     <div className="mx-auto max-w-6xl">
       <div className="kicker">Evidence</div>
-      <h1 className="mt-2 text-3xl font-black">Assurance evidence</h1>
+      <h1 className="mt-2 text-3xl font-bold">Assurance evidence</h1>
       <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
         Store the documents that support reviews, vendor checks, decisions and
         customer-assurance responses. Files are private to workspace members.
@@ -62,7 +62,7 @@ export default async function Evidence() {
       <div className="mt-7 grid gap-4 sm:grid-cols-3">
         {stats.map(([label, value]) => (
           <div className="card p-5" key={label}>
-            <div className="text-3xl font-black">{value}</div>
+            <div className="text-3xl font-bold">{value}</div>
             <div className="mt-1 text-sm text-slate-500">{label}</div>
           </div>
         ))}

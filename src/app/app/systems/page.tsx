@@ -20,7 +20,7 @@ export default async function Systems() {
       <div className="flex items-end justify-between">
         <div>
           <div className="kicker">Register</div>
-          <h1 className="mt-2 text-3xl font-black">AI systems</h1>
+          <h1 className="mt-2 text-3xl font-bold">AI systems</h1>
           <p className="mt-2 text-sm text-slate-400">
             Every AI-enabled system or business use your team relies on.
           </p>

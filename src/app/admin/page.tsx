@@ -38,7 +38,7 @@ export default async function Admin() {
     <main className="container-shell py-8">
       <Logo />
       <div className="mt-8 kicker">Platform admin</div>
-      <h1 className="mt-2 text-3xl font-black">Aegistra control room</h1>
+      <h1 className="mt-2 text-3xl font-bold">Aegistra control room</h1>
 
       <div className="mt-7 grid gap-3 sm:grid-cols-3">
         {[
@@ -48,7 +48,7 @@ export default async function Admin() {
         ].map(([label, value]) => (
           <div key={String(label)} className="card p-5">
             <div className="text-sm text-slate-500">{label}</div>
-            <div className="mt-2 text-3xl font-black">{value}</div>
+            <div className="mt-2 text-3xl font-bold">{value}</div>
           </div>
         ))}
       </div>

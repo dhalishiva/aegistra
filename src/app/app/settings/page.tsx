@@ -93,7 +93,7 @@ export default async function Settings() {
   return (
     <div className="mx-auto max-w-6xl">
       <div className="kicker">Settings</div>
-      <h1 className="mt-2 text-3xl font-black">Workspace settings</h1>
+      <h1 className="mt-2 text-3xl font-bold">Workspace settings</h1>
       <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
         Manage workspace access, roles and your account.
       </p>

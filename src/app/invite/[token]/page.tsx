@@ -44,7 +44,7 @@ export default async function InvitePage({
             </div>
             <div>
               <div className="kicker">Workspace invitation</div>
-              <h1 className="mt-2 text-3xl font-black">Join an Aegistra team</h1>
+              <h1 className="mt-2 text-3xl font-bold">Join an Aegistra team</h1>
             </div>
           </div>
 
