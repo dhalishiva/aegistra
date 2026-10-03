@@ -24,7 +24,10 @@ export async function createWorkspace(formData: FormData) {
     .single();
   if (error) throw error;
 
-  await supabase.from("workspace_members").insert({ workspace_id: workspace.id, user_id: user.id, role: "owner" });
+  const { error: memberError } = await supabase
+    .from("workspace_members")
+    .insert({ workspace_id: workspace.id, user_id: user.id, role: "owner" });
+  if (memberError) throw memberError;
   await supabase.from("profiles").upsert({ user_id: user.id, full_name: String(formData.get("full_name") || "") });
   redirect("/app");
 }

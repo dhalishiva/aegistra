@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
+import { safeRedirectPath } from "@/lib/safe-redirect";
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
@@ -21,7 +22,9 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     setLoading(false);
     if (result.error) return setMessage(result.error.message);
     if (mode === "signup" && !result.data.session) return setMessage("Check your email to confirm your account, then log in.");
-    router.push(mode === "signup" ? "/onboarding" : "/app");
+    // Middleware sends logged-out visitors to /login?next=<page>; send them back there after login.
+    const next = new URLSearchParams(window.location.search).get("next");
+    router.push(mode === "signup" ? "/onboarding" : safeRedirectPath(next, "/app"));
     router.refresh();
   }
 
