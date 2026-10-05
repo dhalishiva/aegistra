@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { NavProgress } from "@/components/nav-progress";
 import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getSiteUrl } from "@/lib/site-url";
 import "@fontsource-variable/bricolage-grotesque/opsz.css";
 import "./globals.css";
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <NavProgress />
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
